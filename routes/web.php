@@ -19,7 +19,15 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // return view('dashboard');
+
+    if (auth()->user()->hasRole('admin')) {
+        return "admin";
+    } else if (auth()->user()->hasRole('editor')) {
+        return "editor";
+    } else {
+        return "viewer";
+    }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
