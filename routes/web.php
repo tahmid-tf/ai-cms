@@ -36,10 +36,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['role:admin'])->group(function () {
-    Route::get('/admin', function () {
-        return "test";
-    });
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::view('/admin/dashboard', 'admin.dashboard');
+});
+
+Route::middleware(['auth', 'role:editor'])->group(function () {
+    Route::view('/editor/dashboard', 'editor.dashboard');
+});
+
+Route::middleware(['auth', 'role:viewer'])->group(function () {
+    Route::view('/viewer/dashboard', 'viewer.dashboard');
 });
 
 require __DIR__ . '/auth.php';
