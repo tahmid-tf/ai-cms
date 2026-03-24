@@ -22,7 +22,7 @@ Route::get('/dashboard', function () {
     // return view('dashboard');
 
     if (auth()->user()->hasRole('admin')) {
-        return "admin";
+        return view('layouts.admin');
     } else if (auth()->user()->hasRole('editor')) {
         return "editor";
     } else {
@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// --------------------------- Admin Dashboards ---------------------------
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard');
 });
@@ -47,5 +49,7 @@ Route::middleware(['auth', 'role:editor'])->group(function () {
 Route::middleware(['auth', 'role:viewer'])->group(function () {
     Route::view('/viewer/dashboard', 'viewer.dashboard');
 });
+
+// --------------------------- Admin Dashboards ---------------------------
 
 require __DIR__ . '/auth.php';
