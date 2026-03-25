@@ -8,14 +8,14 @@
                     <div class="row align-items-center justify-content-between pt-3">
                         <div class="col-auto mb-3">
                             <h1 class="page-header-title">
-                                <div class="page-header-icon"><i data-feather="user-plus"></i></div>
-                                Add User
+                                <div class="page-header-icon"><i data-feather="user-edit"></i></div>
+                                Edit User
                             </h1>
                         </div>
                         <div class="col-12 col-xl-auto mb-3">
                             <a class="btn btn-sm btn-light text-primary" href="{{ route('admin.users.index') }}">
-                            <i class="me-1" data-feather="arrow-left"></i>
-                            Back to Users List
+                                <i class="me-1" data-feather="arrow-left"></i>
+                                Back to Users List
                             </a>
                         </div>
                     </div>
@@ -24,8 +24,9 @@
         </header>
 
         <div class="container-xl px-4 mt-4">
-            <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.users.update', $user->id) }}" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 <div class="row">
 
@@ -36,7 +37,7 @@
                             <div class="card-body text-center">
 
                                 <img id="preview-image" class="img-account-profile rounded-circle mb-2"
-                                    src="{{ asset('assets/img/demo/user-placeholder.svg') }}"
+                                    src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('assets/img/demo/user-placeholder.svg') }}"
                                     style="width:150px;height:150px;object-fit:cover;" />
 
                                 <div class="small font-italic text-muted mb-4">
@@ -59,12 +60,12 @@
                                     <div class="col-md-6">
                                         <label class="small mb-1">First name</label>
                                         <input class="form-control" name="first_name" type="text"
-                                            value="{{ old('first_name') }}" required>
+                                            value="{{ explode(' ', $user->name)[0] ?? '' }}" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="small mb-1">Last name</label>
                                         <input class="form-control" name="last_name" type="text"
-                                            value="{{ old('last_name') }}" required>
+                                            value="{{ explode(' ', $user->name)[1] ?? '' }}" required>
                                     </div>
                                 </div>
 
@@ -74,11 +75,12 @@
                                         <div class="col-md-6">
                                             <label class="small mb-1">Email</label>
                                             <input class="form-control" name="email" type="email"
-                                                value="{{ old('email') }}" required>
+                                                value="{{ $user->email }}" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="small mb-1">Password</label>
-                                            <input class="form-control" name="password" type="password" required>
+                                            <label class="small mb-1">Password <small>(leave blank to keep
+                                                    current)</small></label>
+                                            <input class="form-control" name="password" type="password">
                                         </div>
                                     </div>
                                 </div>
@@ -87,18 +89,19 @@
                                 <div class="mb-3">
                                     <label class="small mb-1">Role</label>
                                     <select name="role" class="form-select" required>
-                                        <option disabled selected>Select a role</option>
-                                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="editor" {{ old('role') == 'editor' ? 'selected' : '' }}>Editor
-                                        </option>
-                                        <option value="viewer" {{ old('role') == 'viewer' ? 'selected' : '' }}>Viewer
-                                        </option>
+                                        <option disabled>Select a role</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role }}"
+                                                {{ $user->hasRole($role) ? 'selected' : '' }}>
+                                                {{ ucfirst($role) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
 
                                 <!-- Submit -->
                                 <button class="btn btn-primary" type="submit">
-                                    Add User
+                                    Update User
                                 </button>
 
                             </div>
@@ -113,49 +116,41 @@
 
 
 @push('scripts')
-
     <script>
         $(document).ready(function() {
 
             // Image Preview
             $('#imageInput').on('change', function(e) {
                 let file = e.target.files[0];
-
                 if (file) {
                     let reader = new FileReader();
-
                     reader.onload = function(e) {
                         $('#preview-image').attr('src', e.target.result);
                     }
-
                     reader.readAsDataURL(file);
                 }
             });
 
+            // ✅ Success Alert
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: "{{ session('success') }}",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            @endif
+
+            // ❌ Error Alert
+            @if ($errors->any())
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: `{!! implode('<br>', $errors->all()) !!}`
+                });
+            @endif
+
         });
     </script>
-
-    {{-- Success Alert --}}
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: "{{ session('success') }}",
-                timer: 2000,
-                showConfirmButton: false
-            });
-        </script>
-    @endif
-
-    {{-- Error Alert --}}
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                html: `{!! implode('<br>', $errors->all()) !!}`
-            });
-        </script>
-    @endif
 @endpush

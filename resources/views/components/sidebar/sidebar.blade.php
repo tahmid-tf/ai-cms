@@ -13,7 +13,7 @@
     <div class="collapse" id="collapseDashboards" data-bs-parent="#accordionSidenav">
         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
             <a class="nav-link" href="{{ route('admin.users.create') }}">Create User</a>
-            <a class="nav-link" href="dashboard-3.html">View Users</a>
+            <a class="nav-link" href="{{ route('admin.users.index') }}">View Users</a>
         </nav>
     </div>
 @endrole
