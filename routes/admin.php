@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AIContentController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])
@@ -12,6 +13,7 @@ Route::middleware(['auth'])
     });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/ai-content', [App\Http\Controllers\AIContentController::class, 'index'])->name('ai.content');
-    Route::post('/admin/ai-content/generate', [App\Http\Controllers\AIContentController::class, 'generate'])->name('ai.content.generate');
+    Route::get('/admin/ai-content', [AIContentController::class, 'index'])->name('ai.content');
+    Route::post('/admin/ai-content/generate', [AIContentController::class, 'generate'])->name('ai.content.generate');
+    Route::post('/admin/ai-content/save', [AIContentController::class, 'save'])->name('ai.content.save');
 });

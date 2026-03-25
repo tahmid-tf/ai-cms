@@ -1,29 +1,16 @@
 @extends('layouts.admin')
 
 @section('content')
-
     <div class="ai-page">
-
-        {{-- Alerts --}}
-        @if (session('error'))
-            <div class="alert-pro error">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
+        <div id="alert-container"></div>
 
         @if ($errors->any())
             <div class="alert-pro error">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -33,41 +20,37 @@
             </div>
         @endif
 
-        {{-- Header --}}
         <div class="ai-header">
             <div class="ai-header-eyebrow">
                 <span class="ai-header-eyebrow-dot"></span>
                 AI Studio
             </div>
             <h1>Generate <em>great</em> content,<br>instantly.</h1>
-            <p class="ai-header-desc">Choose a format, describe what you need, and let the model do the heavy lifting.
-                Works
-                for blogs, products, and social — all in seconds.</p>
+            <p class="ai-header-desc">
+                Choose a format, describe what you need, and let the model do the heavy lifting.
+                Works for blogs, products, and social — all in seconds.
+            </p>
         </div>
 
-        {{-- Form card --}}
         <div class="ai-card">
-            <form action="{{ route('ai.content.generate') }}" method="POST">
+            <form id="ai-generate-form">
                 @csrf
-                <div class="ai-card-body">
 
-                    {{-- Content type --}}
+                <div class="ai-card-body">
                     <div class="field-group">
                         <label class="field-label">Content Type</label>
                         <div class="type-selector">
-
                             <div class="type-option">
-                                <input type="radio" name="content_type" id="type_blog" value="blog post"
-                                    {{ old('content_type', 'blog post') == 'blog post' ? 'checked' : '' }}>
+                                <input type="radio" name="content_type" id="type_blog" value="blog post" checked>
                                 <label for="type_blog">
                                     <div class="type-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                            <polyline points="14 2 14 8 20 8"/>
-                                            <line x1="16" y1="13" x2="8" y2="13"/>
-                                            <line x1="16" y1="17" x2="8" y2="17"/>
-                                            <polyline points="10 9 9 9 8 9"/>
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                            <polyline points="14 2 14 8 20 8" />
+                                            <line x1="16" y1="13" x2="8" y2="13" />
+                                            <line x1="16" y1="17" x2="8" y2="17" />
+                                            <polyline points="10 9 9 9 8 9" />
                                         </svg>
                                     </div>
                                     <span class="type-label-text">Blog Post</span>
@@ -75,15 +58,14 @@
                             </div>
 
                             <div class="type-option">
-                                <input type="radio" name="content_type" id="type_product" value="product description"
-                                    {{ old('content_type') == 'product description' ? 'checked' : '' }}>
+                                <input type="radio" name="content_type" id="type_product" value="product description">
                                 <label for="type_product">
                                     <div class="type-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                                            <line x1="3" y1="6" x2="21" y2="6"/>
-                                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                            <line x1="3" y1="6" x2="21" y2="6" />
+                                            <path d="M16 10a4 4 0 0 1-8 0" />
                                         </svg>
                                     </div>
                                     <span class="type-label-text">Product Description</span>
@@ -91,39 +73,35 @@
                             </div>
 
                             <div class="type-option">
-                                <input type="radio" name="content_type" id="type_social" value="social media caption"
-                                    {{ old('content_type') == 'social media caption' ? 'checked' : '' }}>
+                                <input type="radio" name="content_type" id="type_social" value="social media caption">
                                 <label for="type_social">
                                     <div class="type-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                         </svg>
                                     </div>
                                     <span class="type-label-text">Social Caption</span>
                                 </label>
                             </div>
-
                         </div>
                     </div>
 
-                    {{-- Prompt --}}
                     <div class="field-group" style="margin-bottom:0;">
                         <label for="prompt" class="field-label">Keywords &amp; Prompt</label>
                         <span class="field-hint">Describe your topic, tone, or any specific details you want
                             included.</span>
                         <div class="prompt-wrap">
                             <svg class="prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="m21 21-4.35-4.35"/>
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.35-4.35" />
                             </svg>
                             <input type="text" name="prompt" id="prompt"
-                                   placeholder="e.g. noise-cancelling headphones for remote workers, professional tone…"
-                                   value="{{ old('prompt') }}" required autocomplete="off">
+                                placeholder="e.g. noise-cancelling headphones for remote workers, professional tone…"
+                                required autocomplete="off">
                         </div>
                     </div>
-
                 </div>
 
                 <div class="card-divider"></div>
@@ -131,73 +109,231 @@
                 <div class="ai-card-footer">
                     <div class="footer-note">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                         Results are AI-generated — always review before publishing.
                     </div>
-                    <button type="submit" class="btn-generate">
+
+                    <button type="submit" class="btn-generate" id="generate-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                         </svg>
-                        Generate
+                        <span id="generate-btn-text">Generate</span>
                     </button>
                 </div>
             </form>
         </div>
 
-        {{-- Result --}}
-        @if (session('generated_text'))
-            <div class="result-panel">
-                <div class="result-header">
-                    <div class="result-label">
-                        Output
-                        <span class="result-label-tag">{{ session('content_type') }}</span>
-                    </div>
-                    <button class="copy-btn" id="copy-btn" onclick="copyResult()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
-                        Copy
-                    </button>
+        <div class="result-panel" id="result-panel" style="display:none;">
+            <div class="result-header">
+                <div class="result-label">
+                    Output
+                    <span class="result-label-tag" id="result-content-type"></span>
                 </div>
-                <div class="result-box">
-                    <div class="result-box-inner" id="result-text">{{ session('generated_text') }}</div>
-                    <div class="result-box-footer">
-                        <span class="word-count" id="word-count"></span>
-                    </div>
+
+                <div class="result-actions">
+                    <button class="copy-btn" id="copy-btn" type="button">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        <span>Copy</span>
+                    </button>
+
+                    <button class="copy-btn save-btn" id="save-btn" type="button" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                            <polyline points="17 21 17 13 7 13 7 21" />
+                            <polyline points="7 3 7 8 15 8" />
+                        </svg>
+                        <span id="save-btn-text">Save</span>
+                    </button>
                 </div>
             </div>
 
-            <script>
-                (function () {
-                    const text = document.getElementById('result-text').innerText.trim();
-                    const words = text.split(/\s+/).filter(Boolean).length;
-                    document.getElementById('word-count').textContent = words + ' words · ' + text.length + ' characters';
-                })();
-
-                function copyResult() {
-                    const text = document.getElementById('result-text').innerText;
-                    navigator.clipboard.writeText(text).then(() => {
-                        const btn = document.getElementById('copy-btn');
-                        btn.classList.add('copied');
-                        btn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-                        btn.childNodes[1].textContent = ' Copied!';
-                        setTimeout(() => {
-                            btn.classList.remove('copied');
-                            btn.querySelector('svg').innerHTML =
-                                '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
-                            btn.childNodes[1].textContent = ' Copy';
-                        }, 2000);
-                    });
-                }
-            </script>
-        @endif
-
+            <div class="result-box">
+                <div class="result-box-inner" id="result-text"></div>
+                <div class="result-box-footer">
+                    <span class="word-count" id="word-count"></span>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        const form = document.getElementById('ai-generate-form');
+        const generateBtn = document.getElementById('generate-btn');
+        const generateBtnText = document.getElementById('generate-btn-text');
+        const resultPanel = document.getElementById('result-panel');
+        const resultText = document.getElementById('result-text');
+        const resultContentType = document.getElementById('result-content-type');
+        const wordCount = document.getElementById('word-count');
+        const alertContainer = document.getElementById('alert-container');
+        const copyBtn = document.getElementById('copy-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const saveBtnText = document.getElementById('save-btn-text');
+
+        let latestGenerated = {
+            content_type: '',
+            prompt: '',
+            generated_text: ''
+        };
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAlert();
+
+            const formData = new FormData(form);
+
+            generateBtn.disabled = true;
+            generateBtnText.textContent = 'Generating...';
+            saveBtn.disabled = true;
+            saveBtnText.textContent = 'Save';
+
+            try {
+                const response = await fetch("{{ route('ai.content.generate') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    if (data.errors) {
+                        const messages = Object.values(data.errors).flat().join('<br>');
+                        showAlert(messages, 'error');
+                    } else {
+                        showAlert(data.message || 'Something went wrong while generating content.', 'error');
+                    }
+                    return;
+                }
+
+                latestGenerated = {
+                    content_type: data.content_type,
+                    prompt: formData.get('prompt'),
+                    generated_text: data.generated_text
+                };
+
+                resultText.textContent = data.generated_text;
+                resultContentType.textContent = data.content_type;
+                updateWordCount(data.generated_text);
+                resultPanel.style.display = 'block';
+                saveBtn.disabled = false;
+
+                showAlert(data.message || 'Content generated successfully.', 'success');
+            } catch (error) {
+                showAlert('Unable to connect to the server. Please try again.', 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtnText.textContent = 'Generate';
+            }
+        });
+
+        copyBtn.addEventListener('click', async function() {
+            const text = resultText.innerText.trim();
+
+            if (!text) {
+                showAlert('Nothing to copy yet.', 'error');
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                const label = copyBtn.querySelector('span');
+                copyBtn.classList.add('copied');
+                label.textContent = 'Copied!';
+
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    label.textContent = 'Copy';
+                }, 2000);
+            } catch (error) {
+                showAlert('Copy failed. Please copy manually.', 'error');
+            }
+        });
+
+        saveBtn.addEventListener('click', async function() {
+            clearAlert();
+
+            if (!latestGenerated.generated_text) {
+                showAlert('Generate content first before saving.', 'error');
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtnText.textContent = 'Saving...';
+
+            try {
+                const response = await fetch("{{ route('ai.content.save') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(latestGenerated)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    if (data.errors) {
+                        const messages = Object.values(data.errors).flat().join('<br>');
+                        showAlert(messages, 'error');
+                    } else {
+                        showAlert(data.message || 'Failed to save content.', 'error');
+                    }
+
+                    saveBtn.disabled = false;
+                    saveBtnText.textContent = 'Save';
+                    return;
+                }
+
+                showAlert(data.message || 'Content saved successfully!', 'success');
+                saveBtnText.textContent = 'Saved!';
+
+                setTimeout(() => {
+                    saveBtn.disabled = false;
+                    saveBtnText.textContent = 'Save';
+                }, 1500);
+            } catch (error) {
+                showAlert('Unable to save content right now. Please try again.', 'error');
+                saveBtn.disabled = false;
+                saveBtnText.textContent = 'Save';
+            }
+        });
+
+        function updateWordCount(text) {
+            const words = text.trim().split(/\s+/).filter(Boolean).length;
+            wordCount.textContent = words + ' words · ' + text.length + ' characters';
+        }
+
+        function showAlert(message, type = 'error') {
+            alertContainer.innerHTML = `
+                <div class="alert-pro ${type}">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span>${message}</span>
+                </div>
+            `;
+        }
+
+        function clearAlert() {
+            alertContainer.innerHTML = '';
+        }
+    </script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap');
@@ -215,6 +351,7 @@
             --tag-bg: #f0efe9;
             --success-bg: #f0faf4;
             --success-border: #b4dfc4;
+            --success-text: #166534;
             --error-bg: #fef5f5;
             --error-border: #f5c6c6;
             --error-text: #c0392b;
@@ -227,7 +364,6 @@
             padding: 3rem 1.5rem 5rem;
         }
 
-        /* ── Page header ── */
         .ai-header {
             max-width: 680px;
             margin: 0 auto 2.5rem;
@@ -274,7 +410,6 @@
             font-weight: 300;
         }
 
-        /* ── Alerts ── */
         .alert-pro {
             max-width: 680px;
             margin: 0 auto 1.25rem;
@@ -294,6 +429,12 @@
             color: var(--error-text);
         }
 
+        .alert-pro.success {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
         .alert-pro svg {
             flex-shrink: 0;
             margin-top: 1px;
@@ -304,7 +445,6 @@
             padding-left: 1.1rem;
         }
 
-        /* ── Card ── */
         .ai-card {
             max-width: 680px;
             margin: 0 auto;
@@ -319,7 +459,6 @@
             padding: 2rem 2rem 1.75rem;
         }
 
-        /* ── Field group ── */
         .field-group {
             margin-bottom: 1.5rem;
         }
@@ -342,7 +481,6 @@
             display: block;
         }
 
-        /* Content type selector */
         .type-selector {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -379,7 +517,7 @@
             background: #f3f2ee;
         }
 
-        .type-option input:checked + label {
+        .type-option input:checked+label {
             border-color: var(--border-focus);
             background: var(--surface);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -401,11 +539,11 @@
             stroke: var(--text2);
         }
 
-        .type-option input:checked + label .type-icon {
+        .type-option input:checked+label .type-icon {
             background: var(--text);
         }
 
-        .type-option input:checked + label .type-icon svg {
+        .type-option input:checked+label .type-icon svg {
             stroke: #fff;
         }
 
@@ -416,12 +554,11 @@
             line-height: 1.3;
         }
 
-        .type-option input:checked + label .type-label-text {
+        .type-option input:checked+label .type-label-text {
             color: var(--text);
             font-weight: 600;
         }
 
-        /* Prompt input */
         .prompt-wrap {
             position: relative;
         }
@@ -460,14 +597,12 @@
             box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
         }
 
-        /* ── Divider ── */
         .card-divider {
             height: 1px;
             background: var(--border);
             margin: 0;
         }
 
-        /* ── Card footer ── */
         .ai-card-footer {
             padding: 1.25rem 2rem;
             display: flex;
@@ -511,6 +646,12 @@
             white-space: nowrap;
         }
 
+        .btn-generate:disabled,
+        .copy-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .btn-generate svg {
             width: 15px;
             height: 15px;
@@ -527,7 +668,6 @@
             transform: translateY(0);
         }
 
-        /* ── Result panel ── */
         .result-panel {
             max-width: 680px;
             margin: 1.5rem auto 0;
@@ -538,6 +678,12 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 0.5rem;
         }
 
         .result-label {
@@ -596,6 +742,10 @@
             background: var(--success-bg);
         }
 
+        .save-btn {
+            color: #0f5132;
+        }
+
         .result-box {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -652,6 +802,22 @@
             font-size: 0.73rem;
             color: var(--muted);
             font-weight: 400;
+        }
+
+        @media (max-width: 640px) {
+            .type-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-card-footer,
+            .result-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .result-actions {
+                justify-content: flex-end;
+            }
         }
     </style>
 @endsection
