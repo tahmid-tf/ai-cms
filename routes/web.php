@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-/*
+Route::get('/dashboard', function () {
+    /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -13,13 +15,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    // return view('dashboard');
 
     if (auth()->user()->hasRole('admin')) {
         return view('layouts.admin');
@@ -36,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// --------------------------- Admin Dashboards ---------------------------
+// return view('dashboard');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard');
@@ -52,4 +47,15 @@ Route::middleware(['auth', 'role:viewer'])->group(function () {
 
 // --------------------------- Admin Dashboards ---------------------------
 
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+
+    });
+
 require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';
