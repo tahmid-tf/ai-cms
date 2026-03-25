@@ -14,8 +14,8 @@
                         </div>
                         <div class="col-12 col-xl-auto mb-3">
                             <a class="btn btn-sm btn-light text-primary" href="{{ route('admin.users.index') }}">
-                            <i class="me-1" data-feather="arrow-left"></i>
-                            Back to Users List
+                                <i class="me-1" data-feather="arrow-left"></i>
+                                Back to Users List
                             </a>
                         </div>
                     </div>

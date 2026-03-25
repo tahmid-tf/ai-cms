@@ -1,21 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/dashboard', function () {
-    /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
+Route::get('/dashboard', function () {
     if (auth()->user()->hasRole('admin')) {
         return view('layouts.admin');
     } else if (auth()->user()->hasRole('editor')) {
@@ -31,8 +23,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// return view('dashboard');
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard');
 });
@@ -47,7 +37,5 @@ Route::middleware(['auth', 'role:viewer'])->group(function () {
 
 // --------------------------- Admin Dashboards ---------------------------
 
-
-
 require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+// require __DIR__ . '/admin.php';
