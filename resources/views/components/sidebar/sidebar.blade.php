@@ -40,7 +40,11 @@
     <div class="collapse {{ request()->routeIs('ai.*') ? 'show' : '' }}" id="collapseAI" data-bs-parent="#accordionSidenav">
         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
             <a class="nav-link {{ request()->routeIs('ai.content') ? 'active' : '' }}" href="{{ route('ai.content') }}">
-                AI Content Generate
+                Content Generation
+            </a>
+            <a class="nav-link {{ request()->routeIs('ai.content.list') ? 'active' : '' }}"
+                href="{{ route('ai.content.list') }}">
+                Content List
             </a>
         </nav>
     </div>

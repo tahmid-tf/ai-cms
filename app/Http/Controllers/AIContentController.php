@@ -123,4 +123,21 @@ class AIContentController extends Controller
             ], 500);
         }
     }
+
+    public function list()
+    {
+        $contents = AIContent::where('user_id', Auth::id())->get();
+        return view('admin.ai_contents_list', compact('contents'));
+    }
+
+    public function destroy($id)
+    {
+        $content = AIContent::where('user_id', auth()->id())->findOrFail($id);
+        $content->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Content deleted successfully',
+        ]);
+    }
 }
