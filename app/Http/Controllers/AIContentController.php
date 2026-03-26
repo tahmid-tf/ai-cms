@@ -124,6 +124,23 @@ class AIContentController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $content = AIContent::where('user_id', auth()->id())->findOrFail($id);
+
+        $content->update([
+            'content_type'   => $request->content_type,
+            'prompt'         => $request->prompt,
+            'generated_text' => $request->generated_text,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Content updated successfully',
+            'data'    => $content,
+        ]);
+    }
+
     public function list()
     {
         $contents = AIContent::where('user_id', Auth::id())->get();

@@ -18,4 +18,5 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/ai-content/save', [AIContentController::class, 'save'])->name('ai.content.save');
     Route::get('/admin/ai-contents-list', [AIContentController::class, 'list'])->name('ai.content.list');
     Route::delete('/contents/{id}', [AIContentController::class, 'destroy'])->name('contents.destroy');
+    Route::put('/contents/{id}', [AIContentController::class, 'update'])->name('contents.update');
 });

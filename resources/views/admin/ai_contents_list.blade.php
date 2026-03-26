@@ -56,6 +56,13 @@
                                             data-id="{{ $content->id }}" title="Delete">
                                             <i data-feather="trash-2"></i>
                                         </button>
+                                        <button class="btn btn-xs btn-warning edit-content-btn"
+                                            data-id="{{ $content->id }}" data-type="{{ $content->content_type }}"
+                                            data-prompt="{{ htmlspecialchars($content->prompt, ENT_QUOTES) }}"
+                                            data-text="{{ htmlspecialchars($content->generated_text, ENT_QUOTES) }}"
+                                            title="Edit">
+                                            <i data-feather="edit"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -71,6 +78,36 @@
 
 @push('scripts')
     <script>
+        function escapeHtml(value) {
+            return $('<div>').text(value ?? '').html();
+        }
+
+        function getPreviewText(value, limit = 50) {
+            return value.length > limit ? value.substring(0, limit) + '...' : value;
+        }
+
+        function buildActionButtons(content) {
+            return `
+                <button class="btn btn-xs btn-primary view-content-btn"
+                    data-content="${escapeHtml(content.generated_text)}"
+                    title="View Content">
+                    <i data-feather="eye"></i>
+                </button>
+                <button class="btn btn-xs btn-danger delete-content-btn"
+                    data-id="${content.id}" title="Delete">
+                    <i data-feather="trash-2"></i>
+                </button>
+                <button class="btn btn-xs btn-warning edit-content-btn"
+                    data-id="${content.id}"
+                    data-type="${escapeHtml(content.content_type)}"
+                    data-prompt="${escapeHtml(content.prompt)}"
+                    data-text="${escapeHtml(content.generated_text)}"
+                    title="Edit">
+                    <i data-feather="edit"></i>
+                </button>
+            `;
+        }
+
         $(document).ready(function() {
 
             $('#usersTable').DataTable();
@@ -161,6 +198,115 @@
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'Something went wrong!'
+                            });
+                        }
+                    });
+
+                }
+
+            });
+
+        });
+    </script>
+
+    <script>
+        // update data
+        $(document).on('click', '.edit-content-btn', function() {
+
+            let button = $(this);
+            let id = button.data('id');
+            let row = button.closest('tr');
+
+            let contentType = button.data('type');
+            let prompt = button.data('prompt');
+            let generatedText = button.data('text');
+
+            Swal.fire({
+                title: '<i data-feather="edit" style="width:28px;height:28px;"></i>',
+                width: '800px',
+                html: `
+            <div class="text-start">
+                <label class="mb-1">Content Type</label>
+                <input id="swal-type" class="swal2-input" value="${contentType}">
+
+                <label class="mb-1 mt-2">Prompt</label>
+                <textarea id="swal-prompt" class="swal2-textarea">${prompt}</textarea>
+
+                <label class="mb-1 mt-2">Generated Text</label>
+                <textarea id="swal-text" class="swal2-textarea" style="height:150px;">${generatedText}</textarea>
+            </div>
+        `,
+                showCancelButton: true,
+                confirmButtonText: 'Update',
+                cancelButtonText: 'Cancel',
+                didOpen: () => {
+                    feather.replace();
+                },
+                preConfirm: () => {
+
+                    let updatedType = $('#swal-type').val();
+                    let updatedPrompt = $('#swal-prompt').val();
+                    let updatedText = $('#swal-text').val();
+
+                    if (!updatedType || !updatedPrompt || !updatedText) {
+                        Swal.showValidationMessage('All fields are required');
+                        return false;
+                    }
+
+                    return {
+                        content_type: updatedType,
+                        prompt: updatedPrompt,
+                        generated_text: updatedText
+                    };
+                }
+
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: `/contents/${id}`,
+                        type: 'PUT',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            content_type: result.value.content_type,
+                            prompt: result.value.prompt,
+                            generated_text: result.value.generated_text
+                        },
+                        success: function(response) {
+
+                            if (response.success) {
+
+                                // 🔥 Update row UI instantly
+                                let updated = response.data;
+
+                                let table = $('#usersTable').DataTable();
+
+                                table.row(row).data([
+                                    row.find('td:eq(0)').text(), // keep index
+                                    updated.content_type,
+                                    updated.prompt,
+                                    getPreviewText(updated.generated_text),
+                                    buildActionButtons(updated)
+                                ]).draw();
+
+                                feather.replace();
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Updated!',
+                                    text: response.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
+
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Update failed!'
                             });
                         }
                     });
