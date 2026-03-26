@@ -225,17 +225,79 @@
                 title: '<i data-feather="edit" style="width:28px;height:28px;"></i>',
                 width: '800px',
                 html: `
-            <div class="text-start">
-                <label class="mb-1">Content Type</label>
-                <input id="swal-type" class="swal2-input" value="${contentType}">
+                <style>
+                    .swal-form {
+                        text-align: left;
+                        font-family: system-ui, -apple-system, sans-serif;
+                    }
 
-                <label class="mb-1 mt-2">Prompt</label>
-                <textarea id="swal-prompt" class="swal2-textarea">${prompt}</textarea>
+                    .swal-group {
+                        margin-bottom: 15px;
+                    }
 
-                <label class="mb-1 mt-2">Generated Text</label>
-                <textarea id="swal-text" class="swal2-textarea" style="height:150px;">${generatedText}</textarea>
-            </div>
-        `,
+                    .swal-label {
+                        display: block;
+                        font-size: 13px;
+                        font-weight: 600;
+                        margin-bottom: 5px;
+                        color: #444;
+                    }
+
+                    .swal-input,
+                    .swal-textarea {
+                        width: 100%;
+                        border-radius: 8px;
+                        border: 1px solid #ddd;
+                        padding: 10px 12px;
+                        font-size: 14px;
+                        transition: all 0.2s ease;
+                    }
+
+                    .swal-input:focus,
+                    .swal-textarea:focus {
+                        border-color: #6366f1;
+                        outline: none;
+                        box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
+                    }
+
+                    .swal-textarea {
+                        min-height: 90px;
+                        resize: vertical;
+                    }
+
+                    .swal-textarea.large {
+                        min-height: 150px;
+                    }
+
+                    .swal-card {
+                        background: #f9fafb;
+                        padding: 15px;
+                        border-radius: 10px;
+                        border: 1px solid #eee;
+                    }
+                </style>
+
+                <div class="swal-form">
+                    <div class="swal-card">
+
+                        <div class="swal-group">
+                            <label class="swal-label">Content Type</label>
+                            <input id="swal-type" class="swal-input" value="${contentType}">
+                        </div>
+
+                        <div class="swal-group">
+                            <label class="swal-label">Prompt</label>
+                            <textarea id="swal-prompt" class="swal-textarea">${prompt}</textarea>
+                        </div>
+
+                        <div class="swal-group">
+                            <label class="swal-label">Generated Text</label>
+                            <textarea id="swal-text" class="swal-textarea large">${generatedText}</textarea>
+                        </div>
+
+                    </div>
+                </div>
+                `,
                 showCancelButton: true,
                 confirmButtonText: 'Update',
                 cancelButtonText: 'Cancel',
