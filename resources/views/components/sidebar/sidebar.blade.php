@@ -122,4 +122,27 @@
             </a>
         </nav>
     </div>
+
+    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseAnalytics"
+        aria-expanded="{{ request()->routeIs('analytics.*') ? 'true' : 'false' }}" aria-controls="collapseAnalytics">
+        <div class="nav-link-icon"><i data-feather="bar-chart-2"></i></div>
+        Analytics & Insights
+        <div class="sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </a>
+
+    <div class="collapse {{ request()->routeIs('analytics.*') ? 'show' : '' }}" id="collapseAnalytics"
+        data-bs-parent="#accordionSidenav">
+        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+            <a class="nav-link {{ request()->routeIs('analytics.index') ? 'active' : '' }}"
+                href="{{ route('analytics.index') }}">
+                Analytics Dashboard
+            </a>
+            {{-- <a class="nav-link {{ request()->routeIs('analytics.insights_list') ? 'active' : '' }}"
+                href="{{ route('analytics.insights_list') }}">
+                Insights List
+            </a> --}}
+        </nav>
+    </div>
 @endrole

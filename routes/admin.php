@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AIContentController;
 use App\Http\Controllers\AIContentEditController;
 use App\Http\Controllers\AITranslationController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\VersionControlController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,4 +47,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/version-control/{id}', [VersionControlController::class, 'destroy'])->name('version_control.destroy');
     Route::get('/version-control/{id}/history', [VersionControlController::class, 'history'])->name('version_control.history');
     Route::post('/version-control/{contentId}/restore/{versionId}', [VersionControlController::class, 'restore'])->name('version_control.restore');
+
+    // -------------------------------------- analytics & insights --------------------------------------
+    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::post('/analytics/{contentId}/track', [AnalyticsController::class, 'track'])->name('analytics.track');
+    Route::post('/analytics/{contentId}/generate-insight', [AnalyticsController::class, 'generateInsight'])->name('analytics.generate_insight');
+    Route::get('/admin/analytics-insights-list', [AnalyticsController::class, 'insightsList'])->name('analytics.insights_list');
+    Route::put('/analytics-insights/{id}', [AnalyticsController::class, 'updateInsight'])->name('analytics.update_insight');
+    Route::delete('/analytics-insights/{id}', [AnalyticsController::class, 'destroyInsight'])->name('analytics.destroy_insight');
 });
