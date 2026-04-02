@@ -44,7 +44,8 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $content->title }}</td>
                                     <td>
-                                        <span class="badge {{ $content->status === 'published' ? 'bg-success' : 'bg-warning text-dark' }}">
+                                        <span
+                                            class="badge {{ $content->status === 'published' ? 'bg-success' : 'bg-warning text-dark' }}">
                                             {{ ucfirst($content->status) }}
                                         </span>
                                     </td>
@@ -60,7 +61,8 @@
                                         </button>
                                         <button class="btn btn-xs btn-info history-version-content-btn"
                                             data-id="{{ $content->id }}"
-                                            data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}" title="History">
+                                            data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
+                                            title="History">
                                             <i data-feather="clock"></i>
                                         </button>
                                         <button class="btn btn-xs btn-warning edit-version-content-btn"
@@ -139,25 +141,29 @@
 
             return versions.map((version) => `
                 <tr>
-                    <td>${version.version_number}</td>
-                    <td>${version.is_auto_save === 'yes' ? 'Auto Save' : 'Manual Save'}</td>
-                    <td>${new Date(version.updated_at).toLocaleString()}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary view-history-version-btn"
+                    <td class="vc-history-version-cell">${version.version_number}</td>
+                    <td class="vc-history-type-cell">${version.is_auto_save === 'yes' ? 'Auto Save' : 'Manual Save'}</td>
+                    <td class="vc-history-date-cell">${new Date(version.updated_at).toLocaleString()}</td>
+                    <td class="vc-history-action-cell">
+                        <button class="btn btn-sm btn-outline-primary vc-history-action-btn view-history-version-btn"
                             data-title="${escapeHtml(version.title)}"
                             data-content="${escapeHtml(version.content)}"
                             data-version="${escapeHtml(version.version_number)}">
                             View
                         </button>
                     </td>
-                    <td>
-                        <button class="btn btn-sm btn-success restore-history-version-btn"
+                    <td class="vc-history-action-cell">
+                        <button class="btn btn-sm btn-success vc-history-action-btn restore-history-version-btn"
                             data-content-id="${contentId}" data-version-id="${version.id}">
                             Restore
                         </button>
                     </td>
                 </tr>
             `).join('');
+        }
+
+        function normalizePreviewContent(value) {
+            return String(value ?? '').replace(/^\s+|\s+$/g, '');
         }
 
         $(document).ready(function() {
@@ -355,7 +361,8 @@
                             let message = 'Update failed!';
 
                             if (xhr.status === 422 && xhr.responseJSON?.errors) {
-                                message = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                                message = Object.values(xhr.responseJSON.errors).flat().join(
+                                    '<br>');
                             } else if (xhr.responseJSON?.message) {
                                 message = xhr.responseJSON.message;
                             }
@@ -382,6 +389,8 @@
                 type: 'GET',
                 success: function(response) {
                     if (response.success) {
+                        const previewVersion = response.versions[0] || null;
+
                         Swal.fire({
                             title: `
                                 <div style="display:flex;align-items:center;gap:12px;text-align:left;">
@@ -402,21 +411,37 @@
                             },
                             html: `
                                 <div style="text-align:left;">
-                                    <div style="overflow-x:auto;">
-                                        <table class="table table-bordered mb-0">
-                                            <thead style="background:#f8fafc;">
-                                                <tr>
-                                                    <th>Version</th>
-                                                    <th>Type</th>
-                                                    <th>Edited Date</th>
-                                                    <th>View</th>
-                                                    <th>Restore</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${renderHistoryRows(contentId, response.versions)}
-                                            </tbody>
-                                        </table>
+                                    <div class="vc-history-layout">
+                                        <div class="vc-history-table-wrap">
+                                            <table class="table table-bordered mb-0 vc-history-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Version</th>
+                                                        <th>Type</th>
+                                                        <th>Edited Date</th>
+                                                        <th>View</th>
+                                                        <th>Restore</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${renderHistoryRows(contentId, response.versions)}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div id="history-version-preview" class="vc-history-preview">
+                                            <div class="vc-history-preview-head">
+                                                <div id="history-preview-version" class="vc-history-preview-version">
+                                                    ${previewVersion ? `Version ${previewVersion.version_number}` : 'No Preview'}
+                                                </div>
+                                                <div id="history-preview-title" class="vc-history-preview-title">
+                                                    ${previewVersion ? escapeHtml(normalizePreviewContent(previewVersion.title)) : 'Select a version to preview it here.'}
+                                                </div>
+                                            </div>
+                                            <div id="history-preview-content" class="vc-history-preview-content">
+                                                ${previewVersion ? escapeHtml(normalizePreviewContent(previewVersion.content)) : 'Select a version to preview it here.'}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             `,
@@ -444,19 +469,9 @@
             let content = $(this).data('content');
             let version = $(this).data('version');
 
-            Swal.fire({
-                title: `Version ${version}`,
-                html: `
-                    <div style="text-align:left;max-height:420px;overflow-y:auto;">
-                        <div class="fw-bold mb-2">${title}</div>
-                        <div class="border rounded p-3 bg-light" style="white-space:pre-wrap;">${content}</div>
-                    </div>
-                `,
-                width: '820px',
-                showCancelButton: true,
-                showConfirmButton: false,
-                cancelButtonText: 'Close'
-            });
+            $('#history-preview-version').text(`Version ${version}`);
+            $('#history-preview-title').text(normalizePreviewContent(title));
+            $('#history-preview-content').text(normalizePreviewContent(content));
         });
 
         $(document).on('click', '.restore-history-version-btn', function() {
@@ -518,6 +533,118 @@
         .swal2-html-container.swal-vc-html {
             margin-top: 0.65rem;
             padding-top: 0;
+        }
+
+        .vc-history-layout {
+            display: grid;
+            grid-template-columns: minmax(520px, 1.1fr) minmax(360px, 0.9fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .vc-history-table-wrap {
+            overflow-x: auto;
+            border: 1px solid #dbe3ee;
+            border-radius: 16px;
+            background: #fff;
+        }
+
+        .vc-history-table {
+            table-layout: fixed;
+            margin-bottom: 0;
+        }
+
+        .vc-history-table thead th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .vc-history-table td {
+            vertical-align: middle;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .vc-history-version-cell {
+            width: 72px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .vc-history-type-cell {
+            width: 110px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .vc-history-date-cell {
+            width: 170px;
+            line-height: 1.35;
+        }
+
+        .vc-history-action-cell {
+            width: 92px;
+            text-align: center;
+        }
+
+        .vc-history-action-btn {
+            min-width: 74px;
+            padding: 0.42rem 0.75rem;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .vc-history-preview {
+            border: 1px solid #dbe3ee;
+            border-radius: 16px;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .vc-history-preview-head {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(180deg, #f8fbff 0%, #f8fafc 100%);
+        }
+
+        .vc-history-preview-version {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .vc-history-preview-title {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .vc-history-preview-content {
+            padding: 16px;
+            /* white-space: pre-wrap; */
+            line-height: 1.7;
+            color: #1e293b;
+            font-size: 14px;
+            min-height: 220px;
+            max-height: 360px;
+            overflow-y: auto;
+            display: block;
+            text-align: left;
+        }
+
+        @media (max-width: 900px) {
+            .vc-history-layout {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 @endpush
