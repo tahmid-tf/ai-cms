@@ -24,13 +24,13 @@
         </header>
 
         <div class="container-xl px-4 mt-4">
-            <form method="POST" action="{{ route('admin.users.update', $user->id) }}" enctype="multipart/form-data">
+            <form id="editUserForm" method="POST" action="{{ route('admin.users.update', $user->id) }}"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <div class="row">
 
-                    <!-- Profile Picture -->
                     <div class="col-xl-4">
                         <div class="card mb-4 mb-xl-0">
                             <div class="card-header">Profile Picture</div>
@@ -49,13 +49,11 @@
                         </div>
                     </div>
 
-                    <!-- Account Details -->
                     <div class="col-xl-8">
                         <div class="card mb-4">
                             <div class="card-header">Account Details</div>
                             <div class="card-body">
 
-                                <!-- Name -->
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
                                         <label class="small mb-1">First name</label>
@@ -69,7 +67,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Email & Password -->
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -85,7 +82,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Role -->
                                 <div class="mb-3">
                                     <label class="small mb-1">Role</label>
                                     <select name="role" class="form-select" required>
@@ -99,7 +95,6 @@
                                     </select>
                                 </div>
 
-                                <!-- Submit -->
                                 <button class="btn btn-primary" type="submit">
                                     Update User
                                 </button>
@@ -114,43 +109,77 @@
     </main>
 @endsection
 
-
 @push('scripts')
     <script>
         $(document).ready(function() {
+            let form = $('#editUserForm');
 
-            // Image Preview
             $('#imageInput').on('change', function(e) {
                 let file = e.target.files[0];
+
                 if (file) {
                     let reader = new FileReader();
+
                     reader.onload = function(e) {
                         $('#preview-image').attr('src', e.target.result);
-                    }
+                    };
+
                     reader.readAsDataURL(file);
                 }
             });
 
-            // ✅ Success Alert
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: "{{ session('success') }}",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            @endif
+            form.on('submit', function(e) {
+                e.preventDefault();
 
-            // ❌ Error Alert
-            @if ($errors->any())
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    html: `{!! implode('<br>', $errors->all()) !!}`
-                });
-            @endif
+                let submitButton = form.find('button[type="submit"]');
+                let originalText = submitButton.text();
+                let formData = new FormData(this);
 
+                submitButton.prop('disabled', true).text('Updating...');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            timer: 1800,
+                            showConfirmButton: false
+                        }).then(() => {
+                            if (response.redirect) {
+                                window.location.href = response.redirect;
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'User update failed.';
+
+                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                            errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                        } else if (xhr.responseJSON?.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessage
+                        });
+                    },
+                    complete: function() {
+                        submitButton.prop('disabled', false).text(originalText);
+                    }
+                });
+            });
         });
     </script>
 @endpush

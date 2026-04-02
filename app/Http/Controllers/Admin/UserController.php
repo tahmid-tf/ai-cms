@@ -86,6 +86,14 @@ class UserController extends Controller
 
         $user->syncRoles([$request->role]);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated successfully',
+                'redirect' => route('admin.users.index'),
+            ]);
+        }
+
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
     }
 
