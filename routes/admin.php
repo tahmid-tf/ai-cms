@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AIContentController;
 use App\Http\Controllers\AIContentEditController;
+use App\Http\Controllers\AITranslationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])
@@ -28,4 +29,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/ai-editor-list', [AIContentEditController::class, 'list'])->name('ai_editor.list');
     Route::put('/content-edits/{id}', [AIContentEditController::class, 'update'])->name('ai_editor.update');
     Route::delete('/content-edits/{id}', [AIContentEditController::class, 'destroy'])->name('ai_editor.destroy');
+
+    // -------------------------------------- ai translation content --------------------------------------
+    Route::get('/ai/translation', [AITranslationController::class, 'translationPage'])->name('ai_translation.index');
+    Route::post('/ai/translation', [AITranslationController::class, 'processTranslation'])->name('ai_translation.process');
+    Route::get('/admin/translation-list', [AITranslationController::class, 'list'])->name('ai_translation.list');
+    Route::put('/translations/{id}', [AITranslationController::class, 'update'])->name('ai_translation.update');
+    Route::delete('/translations/{id}', [AITranslationController::class, 'destroy'])->name('ai_translation.destroy');
 });

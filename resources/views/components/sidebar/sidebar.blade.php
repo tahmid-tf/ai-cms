@@ -72,4 +72,29 @@
             </a>
         </nav>
     </div>
+
+    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse"
+        data-bs-target="#collapseAITranslation"
+        aria-expanded="{{ request()->routeIs('ai_translation.*') ? 'true' : 'false' }}"
+        aria-controls="collapseAITranslation">
+        <div class="nav-link-icon"><i data-feather="languages"></i></div>
+        Content Translation
+        <div class="sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </a>
+
+    <div class="collapse {{ request()->routeIs('ai_translation.*') ? 'show' : '' }}" id="collapseAITranslation"
+        data-bs-parent="#accordionSidenav">
+        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+            <a class="nav-link {{ request()->routeIs('ai_translation.index') ? 'active' : '' }}"
+                href="{{ route('ai_translation.index') }}">
+                Content Translation
+            </a>
+            <a class="nav-link {{ request()->routeIs('ai_translation.list') ? 'active' : '' }}"
+                href="{{ route('ai_translation.list') }}">
+                Translation List
+            </a>
+        </nav>
+    </div>
 @endrole
