@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AIContentController;
+use App\Http\Controllers\AIContentEditController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])
@@ -22,6 +23,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // -------------------------------------- ai edit content --------------------------------------
 
-    Route::get('/ai/editor', [AIContentController::class, 'editorPage'])->name('ai_editor.editor');
-    Route::post('/ai/editor', [AIContentController::class, 'processEditor']);
+    Route::get('/ai/editor', [AIContentEditController::class, 'editorPage'])->name('ai_editor.editor');
+    Route::post('/ai/editor', [AIContentEditController::class, 'processEditor']);
+    Route::get('/admin/ai-editor-list', [AIContentEditController::class, 'list'])->name('ai_editor.list');
+    Route::put('/content-edits/{id}', [AIContentEditController::class, 'update'])->name('ai_editor.update');
+    Route::delete('/content-edits/{id}', [AIContentEditController::class, 'destroy'])->name('ai_editor.destroy');
 });

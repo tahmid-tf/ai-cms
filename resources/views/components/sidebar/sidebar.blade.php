@@ -66,6 +66,10 @@
                 href="{{ route('ai_editor.editor') }}">
                 Content Edit
             </a>
+            <a class="nav-link {{ request()->routeIs('ai_editor.list') ? 'active' : '' }}"
+                href="{{ route('ai_editor.list') }}">
+                Content Edit List
+            </a>
         </nav>
     </div>
 @endrole
