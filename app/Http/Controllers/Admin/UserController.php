@@ -99,7 +99,10 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully',
+        ]);
     }
 
 }

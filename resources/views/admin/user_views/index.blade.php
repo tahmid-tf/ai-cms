@@ -89,11 +89,13 @@
         $(document).ready(function() {
 
             // DataTable Init
-            $('#usersTable').DataTable();
+            let table = $('#usersTable').DataTable();
 
             // Delete with Swal
-            $('.delete-btn').click(function() {
-                let userId = $(this).data('id');
+            $(document).on('click', '.delete-btn', function() {
+                let button = $(this);
+                let userId = button.data('id');
+                let row = button.closest('tr');
 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -101,7 +103,8 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonColor: '#858796'
                 }).then((result) => {
                     if (result.isConfirmed) {
 
@@ -111,8 +114,25 @@
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
-                            success: function() {
-                                location.reload();
+                            success: function(response) {
+                                if (response.success) {
+                                    table.row(row).remove().draw(false);
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: 'User deleted successfully.',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    });
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to delete user.'
+                                });
                             }
                         });
 
