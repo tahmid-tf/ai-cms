@@ -31,7 +31,7 @@
     <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseAI"
         aria-expanded="{{ request()->routeIs('ai.*') ? 'true' : 'false' }}" aria-controls="collapseAI">
         <div class="nav-link-icon"><i data-feather="activity"></i></div>
-        AI Section
+        Content Generation
         <div class="sidenav-collapse-arrow">
             <i class="fas fa-angle-down"></i>
         </div>
@@ -45,6 +45,26 @@
             <a class="nav-link {{ request()->routeIs('ai.content.list') ? 'active' : '' }}"
                 href="{{ route('ai.content.list') }}">
                 Content List
+            </a>
+        </nav>
+    </div>
+
+    <!-- Sidenav Accordion (Dashboard)-->
+    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseAIEdit"
+        aria-expanded="{{ request()->routeIs('ai_editor.*') ? 'true' : 'false' }}" aria-controls="collapseAIEdit">
+        <div class="nav-link-icon"><i data-feather="activity"></i></div>
+        Content Edit
+        <div class="sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </a>
+
+    <div class="collapse {{ request()->routeIs('ai_editor.*') ? 'show' : '' }}" id="collapseAIEdit"
+        data-bs-parent="#accordionSidenav">
+        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+            <a class="nav-link {{ request()->routeIs('ai_editor.editor') ? 'active' : '' }}"
+                href="{{ route('ai_editor.editor') }}">
+                Content Edit
             </a>
         </nav>
     </div>

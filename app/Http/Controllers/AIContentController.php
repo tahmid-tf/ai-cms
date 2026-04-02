@@ -157,4 +157,88 @@ class AIContentController extends Controller
             'message' => 'Content deleted successfully',
         ]);
     }
+
+    public function editorPage()
+    {
+        return view('admin.ai.editor');
+    }
+
+    public function processEditor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|string',
+            'type'    => 'required|in:grammar,tone,seo,rewrite',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        $content = $request->content;
+        $type    = $request->type;
+
+        if ($type == 'grammar') {
+            $prompt = "Fix grammar, spelling, and punctuation while preserving the original meaning:\n\n" . $content;
+        } elseif ($type == 'tone') {
+            $prompt = "Rewrite this content in a professional and polished tone while keeping the meaning intact:\n\n" . $content;
+        } elseif ($type == 'seo') {
+            $prompt = "Optimize this content for SEO while keeping it natural, readable, and engaging:\n\n" . $content;
+        } else {
+            $prompt = "Rewrite this content to make it clearer, smoother, and more engaging:\n\n" . $content;
+        }
+
+        try {
+            $edited = $this->callAI($prompt, 500, 0.5);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Content improved successfully.',
+                'edited_content' => $edited,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'error'   => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
+    private function callAI(string $prompt, int $maxTokens = 300, float $temperature = 0.6): string
+    {
+        $apiUrl = 'https://router.huggingface.co/featherless-ai/v1/completions';
+        $apiKey = env('HF_API_KEY');
+
+        if (! $apiKey) {
+            throw new \RuntimeException('HF_API_KEY is not configured.');
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type'  => 'application/json',
+        ])->timeout(60)->post($apiUrl, [
+            'model'       => 'Qwen/Qwen2.5-7B-Instruct',
+            'prompt'      => $prompt,
+            'max_tokens'  => $maxTokens,
+            'temperature' => $temperature,
+        ]);
+
+        if ($response->failed()) {
+            throw new \RuntimeException(
+                $response->json('error.message') ?? $response->json('message') ?? 'AI API failed. Try again.'
+            );
+        }
+
+        $generatedText = trim($response->json('choices.0.text') ?? '');
+
+        if (! $generatedText) {
+            throw new \RuntimeException('No content was returned from the AI service.');
+        }
+
+        return $generatedText;
+    }
 }
