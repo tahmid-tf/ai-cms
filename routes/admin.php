@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AIContentController;
 use App\Http\Controllers\AIContentEditController;
 use App\Http\Controllers\AITranslationController;
+use App\Http\Controllers\VersionControlController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])
@@ -36,4 +37,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/translation-list', [AITranslationController::class, 'list'])->name('ai_translation.list');
     Route::put('/translations/{id}', [AITranslationController::class, 'update'])->name('ai_translation.update');
     Route::delete('/translations/{id}', [AITranslationController::class, 'destroy'])->name('ai_translation.destroy');
+
+    // -------------------------------------- version control & drafts --------------------------------------
+    Route::get('/version-control', [VersionControlController::class, 'index'])->name('version_control.index');
+    Route::post('/version-control', [VersionControlController::class, 'store'])->name('version_control.store');
+    Route::get('/admin/version-control-list', [VersionControlController::class, 'list'])->name('version_control.list');
+    Route::put('/version-control/{id}', [VersionControlController::class, 'update'])->name('version_control.update');
+    Route::delete('/version-control/{id}', [VersionControlController::class, 'destroy'])->name('version_control.destroy');
+    Route::get('/version-control/{id}/history', [VersionControlController::class, 'history'])->name('version_control.history');
+    Route::post('/version-control/{contentId}/restore/{versionId}', [VersionControlController::class, 'restore'])->name('version_control.restore');
 });

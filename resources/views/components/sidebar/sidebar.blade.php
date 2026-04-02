@@ -77,7 +77,7 @@
         data-bs-target="#collapseAITranslation"
         aria-expanded="{{ request()->routeIs('ai_translation.*') ? 'true' : 'false' }}"
         aria-controls="collapseAITranslation">
-        <div class="nav-link-icon"><i data-feather="languages"></i></div>
+        <div class="nav-link-icon"><i data-feather="activity"></i></div>
         Content Translation
         <div class="sidenav-collapse-arrow">
             <i class="fas fa-angle-down"></i>
@@ -94,6 +94,31 @@
             <a class="nav-link {{ request()->routeIs('ai_translation.list') ? 'active' : '' }}"
                 href="{{ route('ai_translation.list') }}">
                 Translation List
+            </a>
+        </nav>
+    </div>
+
+    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse"
+        data-bs-target="#collapseVersionControl"
+        aria-expanded="{{ request()->routeIs('version_control.*') ? 'true' : 'false' }}"
+        aria-controls="collapseVersionControl">
+        <div class="nav-link-icon"><i data-feather="git-branch"></i></div>
+        Version Control
+        <div class="sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </a>
+
+    <div class="collapse {{ request()->routeIs('version_control.*') ? 'show' : '' }}" id="collapseVersionControl"
+        data-bs-parent="#accordionSidenav">
+        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+            <a class="nav-link {{ request()->routeIs('version_control.index') ? 'active' : '' }}"
+                href="{{ route('version_control.index') }}">
+                Create Content
+            </a>
+            <a class="nav-link {{ request()->routeIs('version_control.list') ? 'active' : '' }}"
+                href="{{ route('version_control.list') }}">
+                Version List
             </a>
         </nav>
     </div>
