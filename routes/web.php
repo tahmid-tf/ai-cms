@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExportSharingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'role:editor'])->group(function () {
 Route::middleware(['auth', 'role:viewer'])->group(function () {
     Route::view('/viewer/dashboard', 'viewer.dashboard');
 });
+
+Route::get('/content/{slug}', [ExportSharingController::class, 'publicShow'])->name('content.public');
 
 // --------------------------- Admin Dashboards ---------------------------
 

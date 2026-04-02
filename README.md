@@ -1,6 +1,6 @@
 # AI CMS
 
-AI CMS is a Laravel-based admin content platform that combines AI-assisted content workflows with practical editorial tools. The project currently includes AI content generation, AI-powered editing, AI translation, version control, draft management, analytics tracking, and AI-powered content insights, all wrapped in an admin dashboard UI with asynchronous table actions.
+AI CMS is a Laravel-based admin content platform that combines AI-assisted content workflows with practical editorial tools. The project currently includes AI content generation, AI-powered editing, AI translation, version control, draft management, analytics tracking, AI-powered content insights, and export/sharing tools, all wrapped in an admin dashboard UI with asynchronous table actions.
 
 ## Overview
 
@@ -14,6 +14,8 @@ This project is designed to help content teams:
 - restore older versions when needed
 - track content engagement performance
 - generate AI insights from analytics signals
+- export content as PDF or Word
+- share published content through public links and social share URLs
 
 ## Current Features
 
@@ -75,6 +77,20 @@ This project is designed to help content teams:
 - Save insights into `content_insights`
 - Manage insights with async `view`, `edit`, and `delete`
 
+### 7. Export & Sharing
+
+- Export content as:
+  - PDF
+  - Word (`.docx`)
+- Generate a clean printable export layout
+- Create public content URLs for published content
+- Share published content with:
+  - copy link
+  - Facebook
+  - Twitter (X)
+  - LinkedIn
+- Manage exportable content with async `view`, `edit`, and `delete`
+
 ## Main Modules
 
 The application currently includes these admin areas:
@@ -90,6 +106,7 @@ The application currently includes these admin areas:
 - Version List
 - Analytics Dashboard
 - Insights List
+- Export & Sharing
 
 ## Tech Stack
 
@@ -101,6 +118,8 @@ The application currently includes these admin areas:
 - SweetAlert2
 - Feather Icons
 - Chart.js
+- DOMPDF
+- PHPWord
 - Hugging Face Inference API
 
 ## AI Integration
@@ -142,6 +161,7 @@ Important controllers currently involved:
 - `AITranslationController`
 - `VersionControlController`
 - `AnalyticsController`
+- `ExportSharingController`
 - `Admin\UserController`
 
 Important views currently involved:
@@ -156,6 +176,9 @@ Important views currently involved:
 - `resources/views/admin/version_control/list.blade.php`
 - `resources/views/admin/analytics/index.blade.php`
 - `resources/views/admin/analytics/insights_list.blade.php`
+- `resources/views/admin/export_sharing/index.blade.php`
+- `resources/views/exports/content.blade.php`
+- `resources/views/public/content.blade.php`
 - `resources/views/components/sidebar/sidebar.blade.php`
 
 ## Installation
@@ -203,6 +226,13 @@ Update `.env` with:
 
 - database connection details
 - `HF_API_KEY`
+- `APP_URL`
+
+Example:
+
+```env
+APP_URL=https://your-public-domain.com
+```
 
 ### 6. Run migrations
 
@@ -263,12 +293,27 @@ npm run dev
 4. Charts visualize overall performance
 5. AI insights can be generated for a content item and stored in `content_insights`
 
+### Export & Sharing Flow
+
+1. Admin opens the export and sharing page
+2. Selects a content item from the table
+3. Exports it as PDF or Word when needed
+4. Opens the share modal for a published content item
+5. Copies the public link or shares it through Facebook, Twitter (X), or LinkedIn
+6. Public readers access the content through `/content/{slug}`
+
 ### Engagement Rate Formula
 
 The current engagement rate is calculated as:
 
 ```text
 ((likes + shares) / views) * 100
+```
+
+Or written directly:
+
+```text
+engagement rate = ((likes + shares) / views) * 100
 ```
 
 Notes:
@@ -289,6 +334,7 @@ Possible next improvements:
 - search and filtering across content records
 - raw `content_events` table for event-level tracking
 - weighted engagement scoring
+- tracked social-share metrics connected to analytics
 
 ## Notes
 
@@ -296,6 +342,8 @@ Possible next improvements:
 - Version restore currently reloads the page after a successful restore to guarantee the table reflects the new current state.
 - Some list screens use async redraw behavior so the user does not need a full refresh for normal edit/delete operations.
 - Analytics currently stores aggregate values in `content_analytics` rather than a separate raw `content_events` table.
+- Social platforms such as Facebook and LinkedIn require a real public URL. `localhost` links will not work for external sharing.
+- Public sharing is currently limited to content with `published` status.
 
 ## License
 

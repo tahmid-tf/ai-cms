@@ -5,6 +5,7 @@ use App\Http\Controllers\AIContentController;
 use App\Http\Controllers\AIContentEditController;
 use App\Http\Controllers\AITranslationController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ExportSharingController;
 use App\Http\Controllers\VersionControlController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,4 +56,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/analytics-insights-list', [AnalyticsController::class, 'insightsList'])->name('analytics.insights_list');
     Route::put('/analytics-insights/{id}', [AnalyticsController::class, 'updateInsight'])->name('analytics.update_insight');
     Route::delete('/analytics-insights/{id}', [AnalyticsController::class, 'destroyInsight'])->name('analytics.destroy_insight');
+
+    // -------------------------------------- export & sharing --------------------------------------
+    Route::get('/admin/export-sharing', [ExportSharingController::class, 'index'])->name('export_sharing.index');
+    Route::get('/export-sharing/{id}/pdf', [ExportSharingController::class, 'exportPdf'])->name('export_sharing.pdf');
+    Route::get('/export-sharing/{id}/word', [ExportSharingController::class, 'exportWord'])->name('export_sharing.word');
+    Route::put('/export-sharing/{id}', [ExportSharingController::class, 'update'])->name('export_sharing.update');
+    Route::delete('/export-sharing/{id}', [ExportSharingController::class, 'destroy'])->name('export_sharing.destroy');
 });

@@ -139,10 +139,31 @@
                 href="{{ route('analytics.index') }}">
                 Analytics Dashboard
             </a>
-            {{-- <a class="nav-link {{ request()->routeIs('analytics.insights_list') ? 'active' : '' }}"
+            <a class="nav-link {{ request()->routeIs('analytics.insights_list') ? 'active' : '' }}"
                 href="{{ route('analytics.insights_list') }}">
                 Insights List
-            </a> --}}
+            </a>
+        </nav>
+    </div>
+
+    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse"
+        data-bs-target="#collapseExportSharing"
+        aria-expanded="{{ request()->routeIs('export_sharing.*') ? 'true' : 'false' }}"
+        aria-controls="collapseExportSharing">
+        <div class="nav-link-icon"><i data-feather="share-2"></i></div>
+        Export & Sharing
+        <div class="sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </a>
+
+    <div class="collapse {{ request()->routeIs('export_sharing.*') ? 'show' : '' }}" id="collapseExportSharing"
+        data-bs-parent="#accordionSidenav">
+        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+            <a class="nav-link {{ request()->routeIs('export_sharing.index') ? 'active' : '' }}"
+                href="{{ route('export_sharing.index') }}">
+                Export & Sharing
+            </a>
         </nav>
     </div>
 @endrole
