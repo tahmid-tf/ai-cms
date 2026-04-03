@@ -12,7 +12,7 @@ access, and table actions match each user's responsibilities.
 
 ```text
 email: tahmid.tf1@gmail.com
-password: 123456789
+password: 12345678
 ```
 
 <img src="/public/docs/p1.png">
