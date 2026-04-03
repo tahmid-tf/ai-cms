@@ -24,10 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::view('/admin/dashboard', 'admin.dashboard');
-});
-
 Route::middleware(['auth', 'role:editor'])->group(function () {
     Route::view('/editor/dashboard', 'editor.dashboard');
 });
