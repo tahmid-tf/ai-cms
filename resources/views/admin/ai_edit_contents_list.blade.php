@@ -2,27 +2,20 @@
 
 @section('content')
     <main>
-
-        <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
-            <div class="container-xl px-4">
-                <div class="page-header-content">
-                    <div class="row align-items-center justify-content-between pt-3">
-                        <div class="col-auto mb-3">
-                            <h1 class="page-header-title">
-                                <div class="page-header-icon"><i data-feather="edit-3"></i></div>
-                                View Edited Contents
-                            </h1>
-                        </div>
-                        <div class="col-12 col-xl-auto mb-3">
-                            <a class="btn btn-sm btn-light text-primary" href="{{ route('ai_editor.editor') }}">
-                                <i class="me-1" data-feather="arrow-left"></i>
-                                Open Editor
-                            </a>
-                        </div>
-                    </div>
+        <div class="lp-topbar">
+            <div class="lp-topbar-left">
+                <div class="lp-icon-wrap">
+                    <i data-feather="edit-3"></i>
+                </div>
+                <div>
+                    <div class="lp-title">View Edited Contents</div>
+                    <div class="lp-sub">Review, refine, and manage saved AI-edited content records</div>
                 </div>
             </div>
-        </header>
+            <div class="lp-badges">
+                <span class="lp-badge">Editor History</span>
+            </div>
+        </div>
 
         <div class="container-xl px-4 mt-4">
             <div class="card">
@@ -338,6 +331,62 @@
     </script>
 
     <style>
+        .lp-topbar {
+            background: linear-gradient(90deg, #ffffff 0%, #f1fbfa 100%);
+            border-bottom: 1px solid #d8e4e4;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .lp-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .lp-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #14b8a6 0%, #0f766e 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+        }
+
+        .lp-icon-wrap svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .lp-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #102a2a;
+        }
+
+        .lp-sub {
+            font-size: 0.76rem;
+            color: #789090;
+        }
+
+        .lp-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.32rem 0.8rem;
+            border-radius: 999px;
+            background: #e6f6f4;
+            color: #0f766e;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
         .swal2-popup.swal-edit-record-popup {
             padding: 1.1rem 1.25rem 1.25rem;
         }
@@ -350,6 +399,15 @@
         .swal2-html-container.swal-edit-record-html {
             margin-top: 0.65rem;
             padding-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .lp-topbar {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 @endpush

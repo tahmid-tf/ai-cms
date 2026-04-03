@@ -2,27 +2,20 @@
 
 @section('content')
     <main>
-
-        <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
-            <div class="container-xl px-4">
-                <div class="page-header-content">
-                    <div class="row align-items-center justify-content-between pt-3">
-                        <div class="col-auto mb-3">
-                            <h1 class="page-header-title">
-                                <div class="page-header-icon"><i data-feather="user-edit"></i></div>
-                                View Users
-                            </h1>
-                        </div>
-                        <div class="col-12 col-xl-auto mb-3">
-                            <a class="btn btn-sm btn-light text-primary" href="{{ route('admin.users.create') }}">
-                                <i class="me-1" data-feather="arrow-left"></i>
-                                Add User
-                            </a>
-                        </div>
-                    </div>
+        <div class="lp-topbar">
+            <div class="lp-topbar-left">
+                <div class="lp-icon-wrap">
+                    <i data-feather="users"></i>
+                </div>
+                <div>
+                    <div class="lp-title">View Users</div>
+                    <div class="lp-sub">Manage team members, roles, and account access from one place</div>
                 </div>
             </div>
-        </header>
+            <div class="lp-badges">
+                <span class="lp-badge">User Directory</span>
+            </div>
+        </div>
 
 
 
@@ -142,4 +135,71 @@
 
         });
     </script>
+
+    <style>
+        .lp-topbar {
+            background: linear-gradient(90deg, #ffffff 0%, #f1fbfa 100%);
+            border-bottom: 1px solid #d8e4e4;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .lp-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .lp-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #14b8a6 0%, #0f766e 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+        }
+
+        .lp-icon-wrap svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .lp-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #102a2a;
+        }
+
+        .lp-sub {
+            font-size: 0.76rem;
+            color: #789090;
+        }
+
+        .lp-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.32rem 0.8rem;
+            border-radius: 999px;
+            background: #e6f6f4;
+            color: #0f766e;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .lp-topbar {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 @endpush

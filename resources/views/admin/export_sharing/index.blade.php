@@ -2,26 +2,20 @@
 
 @section('content')
     <main>
-        <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
-            <div class="container-xl px-4">
-                <div class="page-header-content">
-                    <div class="row align-items-center justify-content-between pt-3">
-                        <div class="col-auto mb-3">
-                            <h1 class="page-header-title">
-                                <div class="page-header-icon"><i data-feather="share-2"></i></div>
-                                Export & Sharing
-                            </h1>
-                        </div>
-                        <div class="col-12 col-xl-auto mb-3">
-                            <a class="btn btn-sm btn-light text-primary" href="{{ route('version_control.index') }}">
-                                <i class="me-1" data-feather="arrow-left"></i>
-                                Create Content
-                            </a>
-                        </div>
-                    </div>
+        <div class="es-topbar">
+            <div class="es-topbar-left">
+                <div class="es-icon-wrap">
+                    <i data-feather="share-2"></i>
+                </div>
+                <div>
+                    <div class="es-title">Export & Sharing</div>
+                    <div class="es-sub">Export content as PDF or Word and share published links externally</div>
                 </div>
             </div>
-        </header>
+            <div class="es-badges">
+                <span class="es-badge">Share Ready</span>
+            </div>
+        </div>
 
         <div class="container-xl px-4 mt-4">
             <div class="card">
@@ -389,4 +383,71 @@
             });
         });
     </script>
+
+    <style>
+        .es-topbar {
+            background: linear-gradient(90deg, #ffffff 0%, #f1fbfa 100%);
+            border-bottom: 1px solid #d8e4e4;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .es-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .es-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #14b8a6 0%, #0f766e 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+        }
+
+        .es-icon-wrap svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .es-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #102a2a;
+        }
+
+        .es-sub {
+            font-size: 0.76rem;
+            color: #789090;
+        }
+
+        .es-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.32rem 0.8rem;
+            border-radius: 999px;
+            background: #e6f6f4;
+            color: #0f766e;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .es-topbar {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 @endpush
