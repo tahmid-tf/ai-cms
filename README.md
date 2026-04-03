@@ -8,6 +8,13 @@ UI with asynchronous table actions.
 The platform also includes role-based access control for `admin`, `editor`, and `viewer` users so navigation, route
 access, and table actions match each user's responsibilities.
 
+## Demo Credentials
+
+```text
+email: tahmid.tf1@gmail.com
+password: 123456789
+```
+
 <img src="/public/docs/p1.png">
 
 ## Overview
@@ -38,6 +45,8 @@ This project is designed to help content teams:
 
 ### 2. AI Content Editing
 
+<img src="/public/docs/p3.png">
+
 - Improve content using AI edit modes:
     - grammar
     - professional tone
@@ -48,6 +57,8 @@ This project is designed to help content teams:
 - Async `view`, `edit`, and `delete` actions
 
 ### 3. AI Translation
+
+<img src="/public/docs/p4.png">
 
 - Translate content into:
     - Bangla
@@ -61,6 +72,8 @@ This project is designed to help content teams:
 
 ### 4. Version Control and Drafts
 
+<img src="/public/docs/p5.png">
+
 - Create content as `draft` or `published`
 - Save a new entry in `content_versions` whenever content is created or updated
 - Track `current_version_id` in `contents`
@@ -69,6 +82,8 @@ This project is designed to help content teams:
 
 ### 5. Dashboard UX Improvements
 
+<img src="/public/docs/p6.png">
+
 - DataTables-based list screens
 - SweetAlert-powered async modal operations
 - Inline modal editing for multiple modules
@@ -76,6 +91,8 @@ This project is designed to help content teams:
 - Role-aware dashboard shortcuts and quick-access cards
 
 ### 6. Analytics & Insights
+
+<img src="/public/docs/p7.png">
 
 - Track content engagement through:
     - views
@@ -89,6 +106,8 @@ This project is designed to help content teams:
 - Manage insights with async `view`, `edit`, and `delete`
 
 ### 7. Export & Sharing
+
+<img src="/public/docs/p8.png">
 
 - Export content as:
     - PDF
