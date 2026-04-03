@@ -363,11 +363,63 @@
 
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 <script src="js/litepicker.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script>
     feather.replace();
 </script>
+<script>
+    window.initResponsiveDataTable = function(selector, options = {}) {
+        if (!window.jQuery || !$.fn.DataTable || !$(selector).length) {
+            return null;
+        }
+
+        const defaults = {
+            responsive: true,
+            autoWidth: false
+        };
+
+        return $(selector).DataTable($.extend(true, {}, defaults, options));
+    };
+
+    $(window).on('resize', function() {
+        if (!$.fn.DataTable) {
+            return;
+        }
+
+        $.fn.dataTable.tables({
+            visible: true,
+            api: true
+        }).columns.adjust().responsive.recalc();
+    });
+</script>
+<style>
+    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control::before,
+    table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control::before {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    @media (max-width: 768px) {
+        .dataTables_wrapper {
+            overflow-x: hidden;
+        }
+
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            float: none !important;
+            text-align: left !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            margin-top: 0.75rem;
+        }
+    }
+</style>
 
 @stack('scripts')

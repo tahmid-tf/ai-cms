@@ -176,7 +176,7 @@
         }
 
         $(document).ready(function() {
-            $('#versionControlTable').DataTable();
+            initResponsiveDataTable('#versionControlTable');
 
             $(document).on('click', '.view-version-content-btn', function() {
                 let title = $(this).data('title');

@@ -1,8 +1,14 @@
 # AI CMS
 
-AI CMS is a Laravel-based admin content platform that combines AI-assisted content workflows with practical editorial tools. The project currently includes AI content generation, AI-powered editing, AI translation, version control, draft management, analytics tracking, AI-powered content insights, and export/sharing tools, all wrapped in an admin dashboard UI with asynchronous table actions.
+AI CMS is a Laravel-based admin content platform that combines AI-assisted content workflows with practical editorial
+tools. The project currently includes AI content generation, AI-powered editing, AI translation, version control, draft
+management, analytics tracking, AI-powered content insights, and export/sharing tools, all wrapped in an admin dashboard
+UI with asynchronous table actions.
 
-The platform also includes role-based access control for `admin`, `editor`, and `viewer` users so navigation, route access, and table actions match each user's responsibilities.
+The platform also includes role-based access control for `admin`, `editor`, and `viewer` users so navigation, route
+access, and table actions match each user's responsibilities.
+
+<img src="/public/docs/p1.png">
 
 ## Overview
 
@@ -23,6 +29,8 @@ This project is designed to help content teams:
 
 ### 1. AI Content Generation
 
+<img src="/public/docs/p2.png">
+
 - Generate content from a prompt and selected content type
 - Save generated content to the database
 - View saved generated content in a DataTable
@@ -31,10 +39,10 @@ This project is designed to help content teams:
 ### 2. AI Content Editing
 
 - Improve content using AI edit modes:
-  - grammar
-  - professional tone
-  - SEO optimization
-  - rewrite
+    - grammar
+    - professional tone
+    - SEO optimization
+    - rewrite
 - Save each edited result into `content_edits`
 - View saved edit records in a list table
 - Async `view`, `edit`, and `delete` actions
@@ -42,11 +50,11 @@ This project is designed to help content teams:
 ### 3. AI Translation
 
 - Translate content into:
-  - Bangla
-  - English
-  - Hindi
-  - Arabic
-  - Spanish
+    - Bangla
+    - English
+    - Hindi
+    - Arabic
+    - Spanish
 - Save translated records into `translations`
 - Translation flow is tuned to return only the selected target language output
 - Translation history includes async `view`, `edit`, and `delete`
@@ -70,9 +78,9 @@ This project is designed to help content teams:
 ### 6. Analytics & Insights
 
 - Track content engagement through:
-  - views
-  - likes
-  - shares
+    - views
+    - likes
+    - shares
 - Aggregate content performance into dashboard metrics
 - Show top-performing and lowest-performing content
 - Visualize data using Chart.js
@@ -83,15 +91,15 @@ This project is designed to help content teams:
 ### 7. Export & Sharing
 
 - Export content as:
-  - PDF
-  - Word (`.docx`)
+    - PDF
+    - Word (`.docx`)
 - Generate a clean printable export layout
 - Create public content URLs for published content
 - Share published content with:
-  - copy link
-  - Facebook
-  - Twitter (X)
-  - LinkedIn
+    - copy link
+    - Facebook
+    - Twitter (X)
+    - LinkedIn
 - Manage exportable content with async `view`, `edit`, and `delete`
 
 ## Main Modules
@@ -115,14 +123,16 @@ The application currently includes these admin areas:
 
 The application currently uses three roles:
 
-- `admin`: full access to all modules, creation pages, AI actions, delete actions, exports, sharing, analytics dashboard, and user management
+- `admin`: full access to all modules, creation pages, AI actions, delete actions, exports, sharing, analytics
+  dashboard, and user management
 - `editor`: access to dashboard, list pages, version history, and record editing/restoring where supported
 - `viewer`: access to dashboard and read-only list pages only
 
 Current rules include:
 
 - only `admin` can access the `Users` section
-- only `admin` can access create/generate/process pages such as content generation, content editing, translation processing, analytics generation, and exports
+- only `admin` can access create/generate/process pages such as content generation, content editing, translation
+  processing, analytics generation, and exports
 - `editor` can work with list/history-oriented flows and update records where allowed
 - `viewer` can open tables and inspect records, but does not get edit/delete controls
 
@@ -363,13 +373,18 @@ Possible next improvements:
 
 ## Notes
 
-- Translation currently enforces the selected target language output as much as possible through prompt design and response cleanup.
-- Version restore currently reloads the page after a successful restore to guarantee the table reflects the new current state.
-- Some list screens use async redraw behavior so the user does not need a full refresh for normal edit/delete operations.
+- Translation currently enforces the selected target language output as much as possible through prompt design and
+  response cleanup.
+- Version restore currently reloads the page after a successful restore to guarantee the table reflects the new current
+  state.
+- Some list screens use async redraw behavior so the user does not need a full refresh for normal edit/delete
+  operations.
 - Analytics currently stores aggregate values in `content_analytics` rather than a separate raw `content_events` table.
-- Social platforms such as Facebook and LinkedIn require a real public URL. `localhost` links will not work for external sharing.
+- Social platforms such as Facebook and LinkedIn require a real public URL. `localhost` links will not work for external
+  sharing.
 - Public sharing is currently limited to content with `published` status.
-- Sidebar visibility, route access, and DataTable action buttons are role-aware and currently aligned with the `admin`, `editor`, and `viewer` permissions described above.
+- Sidebar visibility, route access, and DataTable action buttons are role-aware and currently aligned with the `admin`,
+  `editor`, and `viewer` permissions described above.
 
 ## License
 

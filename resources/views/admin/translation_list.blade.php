@@ -131,7 +131,7 @@
         }
 
         $(document).ready(function() {
-            $('#translationsTable').DataTable();
+            initResponsiveDataTable('#translationsTable');
 
             $(document).on('click', '.view-translation-btn', function() {
                 let originalContent = $(this).data('original');

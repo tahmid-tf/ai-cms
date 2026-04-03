@@ -116,7 +116,7 @@
 
         $(document).ready(function() {
 
-            $('#usersTable').DataTable();
+            initResponsiveDataTable('#usersTable');
 
             $(document).on('click', '.view-content-btn', function() {
                 let content = $(this).data('content');

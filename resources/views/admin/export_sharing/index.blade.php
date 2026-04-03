@@ -149,7 +149,7 @@
         }
 
         $(document).ready(function() {
-            $('#exportSharingTable').DataTable();
+            initResponsiveDataTable('#exportSharingTable');
 
             $(document).on('click', '.view-export-content-btn', function() {
                 let title = $(this).data('title');

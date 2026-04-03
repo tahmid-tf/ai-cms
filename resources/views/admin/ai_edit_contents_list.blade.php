@@ -127,7 +127,7 @@
         }
 
         $(document).ready(function() {
-            $('#editContentsTable').DataTable();
+            initResponsiveDataTable('#editContentsTable');
 
             $(document).on('click', '.view-content-edit-btn', function() {
                 let originalContent = $(this).data('original');

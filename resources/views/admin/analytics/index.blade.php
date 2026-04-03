@@ -123,7 +123,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function() {
-            $('#analyticsTable').DataTable();
+            initResponsiveDataTable('#analyticsTable');
 
             const labels = @json($chartLabels);
             const viewsData = @json($viewsChartData);

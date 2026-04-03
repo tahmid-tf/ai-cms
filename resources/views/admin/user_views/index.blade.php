@@ -82,7 +82,7 @@
         $(document).ready(function() {
 
             // DataTable Init
-            let table = $('#usersTable').DataTable();
+            let table = initResponsiveDataTable('#usersTable');
 
             // Delete with Swal
             $(document).on('click', '.delete-btn', function() {

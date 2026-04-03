@@ -112,7 +112,7 @@
         }
 
         $(document).ready(function() {
-            $('#insightsTable').DataTable();
+            initResponsiveDataTable('#insightsTable');
 
             $(document).on('click', '.view-insight-btn', function() {
                 let contentTitle = $(this).data('content-title');
