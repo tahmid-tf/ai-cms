@@ -1,823 +1,846 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="ai-page">
-        <div id="alert-container"></div>
-
-        @if ($errors->any())
-            <div class="alert-pro error">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
+    <div class="gc-topbar">
+        <div class="gc-topbar-left">
+            <div class="gc-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                 </svg>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
             </div>
-        @endif
-
-        <div class="ai-header">
-            <div class="ai-header-eyebrow">
-                <span class="ai-header-eyebrow-dot"></span>
-                AI Studio
+            <div>
+                <div class="gc-title">AI Content Generation</div>
+                <div class="gc-sub">Create polished content from a prompt in seconds</div>
             </div>
-            <h1>Generate <em>great</em> content,<br>instantly.</h1>
-            <p class="ai-header-desc">
-                Choose a format, describe what you need, and let the model do the heavy lifting.
-                Works for blogs, products, and social — all in seconds.
-            </p>
         </div>
+        <div class="gc-badges">
+            <span class="gc-badge">AI Powered</span>
+        </div>
+    </div>
 
-        <div class="ai-card">
-            <form id="ai-generate-form">
-                @csrf
-
-                <div class="ai-card-body">
-                    <div class="field-group">
-                        <label class="field-label">Content Type</label>
-                        <div class="type-selector">
-                            <div class="type-option">
-                                <input type="radio" name="content_type" id="type_blog" value="blog post" checked>
-                                <label for="type_blog">
-                                    <div class="type-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                            <polyline points="14 2 14 8 20 8" />
-                                            <line x1="16" y1="13" x2="8" y2="13" />
-                                            <line x1="16" y1="17" x2="8" y2="17" />
-                                            <polyline points="10 9 9 9 8 9" />
-                                        </svg>
-                                    </div>
-                                    <span class="type-label-text">Blog Post</span>
-                                </label>
-                            </div>
-
-                            <div class="type-option">
-                                <input type="radio" name="content_type" id="type_product" value="product description">
-                                <label for="type_product">
-                                    <div class="type-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                                            <line x1="3" y1="6" x2="21" y2="6" />
-                                            <path d="M16 10a4 4 0 0 1-8 0" />
-                                        </svg>
-                                    </div>
-                                    <span class="type-label-text">Product Description</span>
-                                </label>
-                            </div>
-
-                            <div class="type-option">
-                                <input type="radio" name="content_type" id="type_social" value="social media caption">
-                                <label for="type_social">
-                                    <div class="type-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                        </svg>
-                                    </div>
-                                    <span class="type-label-text">Social Caption</span>
-                                </label>
-                            </div>
-                        </div>
+    <div class="gc-page">
+        <div class="gc-sidebar">
+            <div class="gc-card">
+                <div class="gc-card-header">
+                    <div class="gc-card-header-icon">
+                        <i data-feather="layout"></i>
                     </div>
+                    <span class="gc-card-title">Content Type</span>
+                </div>
+                <div class="gc-card-body">
+                    <div class="gc-type-list">
+                        <div class="gc-type-option">
+                            <input type="radio" name="content_type" id="type_blog" value="blog post" checked>
+                            <label for="type_blog">
+                                <div class="gc-type-icon"><i data-feather="file-text"></i></div>
+                                <div class="gc-type-text">
+                                    <span class="gc-type-label">Blog Post</span>
+                                    <span class="gc-type-desc">Long-form editorial content</span>
+                                </div>
+                            </label>
+                        </div>
 
-                    <div class="field-group" style="margin-bottom:0;">
-                        <label for="prompt" class="field-label">Keywords &amp; Prompt</label>
-                        <span class="field-hint">Describe your topic, tone, or any specific details you want
-                            included.</span>
-                        <div class="prompt-wrap">
-                            <svg class="prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8" />
-                                <path d="m21 21-4.35-4.35" />
-                            </svg>
-                            <input type="text" name="prompt" id="prompt"
-                                placeholder="e.g. noise-cancelling headphones for remote workers, professional tone…"
-                                required autocomplete="off">
+                        <div class="gc-type-option">
+                            <input type="radio" name="content_type" id="type_product" value="product description">
+                            <label for="type_product">
+                                <div class="gc-type-icon"><i data-feather="shopping-bag"></i></div>
+                                <div class="gc-type-text">
+                                    <span class="gc-type-label">Product Description</span>
+                                    <span class="gc-type-desc">Feature-focused selling copy</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="gc-type-option">
+                            <input type="radio" name="content_type" id="type_social" value="social media caption">
+                            <label for="type_social">
+                                <div class="gc-type-icon"><i data-feather="message-square"></i></div>
+                                <div class="gc-type-text">
+                                    <span class="gc-type-label">Social Caption</span>
+                                    <span class="gc-type-desc">Short, punchy social content</span>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card-divider"></div>
-
-                <div class="ai-card-footer">
-                    <div class="footer-note">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        </svg>
-                        Results are AI-generated — always review before publishing.
+            <div class="gc-card">
+                <div class="gc-card-header">
+                    <div class="gc-card-header-icon">
+                        <i data-feather="bar-chart-2"></i>
                     </div>
-
-                    <button type="submit" class="btn-generate" id="generate-btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                        </svg>
-                        <span id="generate-btn-text">Generate</span>
-                    </button>
+                    <span class="gc-card-title">Stats</span>
                 </div>
-            </form>
+                <div class="gc-card-body">
+                    <div class="gc-stat-row"><span class="gc-stat-label">Words (prompt)</span><span class="gc-stat-val"
+                            id="gc-stat-words-in">0</span></div>
+                    <div class="gc-stat-row"><span class="gc-stat-label">Chars (prompt)</span><span class="gc-stat-val"
+                            id="gc-stat-chars-in">0</span></div>
+                    <div class="gc-stat-row"><span class="gc-stat-label">Words (output)</span><span class="gc-stat-val"
+                            id="gc-stat-words-out">-</span></div>
+                    <div class="gc-stat-row"><span class="gc-stat-label">Chars (output)</span><span class="gc-stat-val"
+                            id="gc-stat-chars-out">-</span></div>
+                </div>
+            </div>
         </div>
 
-        <div class="result-panel" id="result-panel" style="display:none;">
-            <div class="result-header">
-                <div class="result-label">
-                    Output
-                    <span class="result-label-tag" id="result-content-type"></span>
+        <div class="gc-main">
+            <div id="gc-alert-container"></div>
+
+            <div class="gc-editor-grid">
+                <div class="gc-pane">
+                    <div class="gc-pane-label">
+                        Prompt & Keywords
+                        <button type="button" class="gc-pane-action" id="gc-clear-btn">
+                            <i data-feather="trash-2"></i>
+                            Clear
+                        </button>
+                    </div>
+                    <textarea class="gc-textarea" id="gc-prompt"
+                        placeholder="Describe what you want to generate. Include topic, audience, tone, structure, keywords, or any specific requirements."></textarea>
                 </div>
 
-                <div class="result-actions">
-                    <button class="copy-btn" id="copy-btn" type="button">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                        </svg>
-                        <span>Copy</span>
-                    </button>
-
-                    <button class="copy-btn save-btn" id="save-btn" type="button" disabled>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                            <polyline points="17 21 17 13 7 13 7 21" />
-                            <polyline points="7 3 7 8 15 8" />
-                        </svg>
-                        <span id="save-btn-text">Save</span>
-                    </button>
+                <div class="gc-pane">
+                    <div class="gc-pane-label">
+                        Generated Output
+                        <div class="gc-pane-actions">
+                            <button type="button" class="gc-pane-action gc-copy-btn" id="gc-copy-btn" disabled>
+                                <i data-feather="copy"></i>
+                                Copy
+                            </button>
+                            <button type="button" class="gc-pane-action gc-save-btn" id="gc-save-btn" disabled>
+                                <i data-feather="save"></i>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    <textarea class="gc-textarea" id="gc-output" readonly
+                        placeholder="Generated content will appear here after you run the prompt."></textarea>
                 </div>
             </div>
 
-            <div class="result-box">
-                <div class="result-box-inner" id="result-text"></div>
-                <div class="result-box-footer">
-                    <span class="word-count" id="word-count"></span>
+            <div class="gc-action-bar">
+                <div class="gc-action-left">
+                    <div class="gc-selected-type">
+                        Type: <span id="gc-active-type-label">Blog Post</span>
+                    </div>
+                    <div class="gc-tip">
+                        <i data-feather="info"></i>
+                        Review AI output before publishing or saving.
+                    </div>
+                </div>
+                <div class="gc-action-right">
+                    <button type="button" class="gc-btn-generate" id="gc-generate-btn">
+                        <i data-feather="zap"></i>
+                        <span id="gc-generate-btn-text">Generate Content</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+@endsection
 
+@push('scripts')
     <script>
-        const form = document.getElementById('ai-generate-form');
-        const generateBtn = document.getElementById('generate-btn');
-        const generateBtnText = document.getElementById('generate-btn-text');
-        const resultPanel = document.getElementById('result-panel');
-        const resultText = document.getElementById('result-text');
-        const resultContentType = document.getElementById('result-content-type');
-        const wordCount = document.getElementById('word-count');
-        const alertContainer = document.getElementById('alert-container');
-        const copyBtn = document.getElementById('copy-btn');
-        const saveBtn = document.getElementById('save-btn');
-        const saveBtnText = document.getElementById('save-btn-text');
+        $(document).ready(function() {
+            const alertContainer = $('#gc-alert-container');
+            const promptInput = $('#gc-prompt');
+            const outputInput = $('#gc-output');
+            const generateBtn = $('#gc-generate-btn');
+            const generateBtnText = $('#gc-generate-btn-text');
+            const copyBtn = $('#gc-copy-btn');
+            const saveBtn = $('#gc-save-btn');
+            const activeTypeLabel = $('#gc-active-type-label');
 
-        let latestGenerated = {
-            content_type: '',
-            prompt: '',
-            generated_text: ''
-        };
+            let latestGenerated = {
+                content_type: 'blog post',
+                prompt: '',
+                generated_text: ''
+            };
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            clearAlert();
+            function updateStats() {
+                const inputText = promptInput.val().trim();
+                const outputText = outputInput.val().trim();
+                const inputWords = inputText ? inputText.split(/\s+/).filter(Boolean).length : 0;
+                const outputWords = outputText ? outputText.split(/\s+/).filter(Boolean).length : 0;
 
-            const formData = new FormData(form);
+                $('#gc-stat-words-in').text(inputWords);
+                $('#gc-stat-chars-in').text(inputText.length);
+                $('#gc-stat-words-out').text(outputText ? outputWords : '-');
+                $('#gc-stat-chars-out').text(outputText ? outputText.length : '-');
+            }
 
-            generateBtn.disabled = true;
-            generateBtnText.textContent = 'Generating...';
-            saveBtn.disabled = true;
-            saveBtnText.textContent = 'Save';
+            function showAlert(message, type = 'error') {
+                alertContainer.html(`
+                    <div class="gc-alert ${type}">
+                        <i data-feather="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                `);
+                feather.replace();
+            }
 
-            try {
-                const response = await fetch("{{ route('ai.content.generate') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
+            function clearAlert() {
+                alertContainer.html('');
+            }
 
-                const data = await response.json();
+            function resetCopyButton() {
+                copyBtn.prop('disabled', true).removeClass('copied').html('<i data-feather="copy"></i> Copy');
+                feather.replace();
+            }
 
-                if (!response.ok || !data.success) {
-                    if (data.errors) {
-                        const messages = Object.values(data.errors).flat().join('<br>');
-                        showAlert(messages, 'error');
-                    } else {
-                        showAlert(data.message || 'Something went wrong while generating content.', 'error');
-                    }
-                    return;
-                }
+            function resetSaveButton(label = 'Save') {
+                saveBtn.prop('disabled', true).html(`<i data-feather="save"></i> ${label}`);
+                feather.replace();
+            }
 
+            function enableSaveButton(label = 'Save') {
+                saveBtn.prop('disabled', false).html(`<i data-feather="save"></i> ${label}`);
+                feather.replace();
+            }
+
+            promptInput.on('input', updateStats);
+
+            $('input[name="content_type"]').on('change', function() {
+                activeTypeLabel.text($(this).closest('.gc-type-option').find('.gc-type-label').text());
+            });
+
+            $('#gc-clear-btn').on('click', function() {
+                promptInput.val('');
+                outputInput.val('').removeClass('has-output loading');
                 latestGenerated = {
-                    content_type: data.content_type,
-                    prompt: formData.get('prompt'),
-                    generated_text: data.generated_text
+                    content_type: $('input[name="content_type"]:checked').val(),
+                    prompt: '',
+                    generated_text: ''
                 };
+                resetCopyButton();
+                resetSaveButton();
+                clearAlert();
+                updateStats();
+            });
 
-                resultText.textContent = data.generated_text;
-                resultContentType.textContent = data.content_type;
-                updateWordCount(data.generated_text);
-                resultPanel.style.display = 'block';
-                saveBtn.disabled = false;
-
-                showAlert(data.message || 'Content generated successfully.', 'success');
-            } catch (error) {
-                showAlert('Unable to connect to the server. Please try again.', 'error');
-            } finally {
-                generateBtn.disabled = false;
-                generateBtnText.textContent = 'Generate';
-            }
-        });
-
-        copyBtn.addEventListener('click', async function() {
-            const text = resultText.innerText.trim();
-
-            if (!text) {
-                showAlert('Nothing to copy yet.', 'error');
-                return;
-            }
-
-            try {
-                await navigator.clipboard.writeText(text);
-                const label = copyBtn.querySelector('span');
-                copyBtn.classList.add('copied');
-                label.textContent = 'Copied!';
-
-                setTimeout(() => {
-                    copyBtn.classList.remove('copied');
-                    label.textContent = 'Copy';
-                }, 2000);
-            } catch (error) {
-                showAlert('Copy failed. Please copy manually.', 'error');
-            }
-        });
-
-        saveBtn.addEventListener('click', async function() {
-            clearAlert();
-
-            if (!latestGenerated.generated_text) {
-                showAlert('Generate content first before saving.', 'error');
-                return;
-            }
-
-            saveBtn.disabled = true;
-            saveBtnText.textContent = 'Saving...';
-
-            try {
-                const response = await fetch("{{ route('ai.content.save') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(latestGenerated)
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success) {
-                    if (data.errors) {
-                        const messages = Object.values(data.errors).flat().join('<br>');
-                        showAlert(messages, 'error');
-                    } else {
-                        showAlert(data.message || 'Failed to save content.', 'error');
-                    }
-
-                    saveBtn.disabled = false;
-                    saveBtnText.textContent = 'Save';
+            copyBtn.on('click', function() {
+                const text = outputInput.val();
+                if (!text) {
                     return;
                 }
 
-                showAlert(data.message || 'Content saved successfully!', 'success');
-                saveBtnText.textContent = 'Saved!';
+                navigator.clipboard.writeText(text).then(() => {
+                    copyBtn.addClass('copied').html('<i data-feather="check"></i> Copied!');
+                    feather.replace();
 
-                setTimeout(() => {
-                    saveBtn.disabled = false;
-                    saveBtnText.textContent = 'Save';
-                }, 1500);
-            } catch (error) {
-                showAlert('Unable to save content right now. Please try again.', 'error');
-                saveBtn.disabled = false;
-                saveBtnText.textContent = 'Save';
-            }
+                    setTimeout(() => {
+                        copyBtn.removeClass('copied').html('<i data-feather="copy"></i> Copy');
+                        feather.replace();
+                    }, 2000);
+                }).catch(() => {
+                    showAlert('Copy failed. Please copy manually.', 'error');
+                });
+            });
+
+            generateBtn.on('click', function() {
+                clearAlert();
+
+                const prompt = promptInput.val().trim();
+                const contentType = $('input[name="content_type"]:checked').val();
+
+                if (!prompt) {
+                    showAlert('Please enter a prompt before generating content.', 'error');
+                    return;
+                }
+
+                generateBtn.prop('disabled', true);
+                generateBtnText.text('Generating...');
+                outputInput.addClass('loading').removeClass('has-output').val('');
+                resetCopyButton();
+                resetSaveButton();
+                updateStats();
+
+                $.ajax({
+                    url: '{{ route('ai.content.generate') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        content_type: contentType,
+                        prompt: prompt
+                    },
+                    success: function(response) {
+                        latestGenerated = {
+                            content_type: response.content_type,
+                            prompt: prompt,
+                            generated_text: response.generated_text
+                        };
+
+                        outputInput
+                            .removeClass('loading')
+                            .addClass('has-output')
+                            .val(response.generated_text);
+
+                        copyBtn.prop('disabled', false).html('<i data-feather="copy"></i> Copy');
+                        enableSaveButton();
+                        updateStats();
+                        showAlert(response.message || 'Content generated successfully.', 'success');
+                        feather.replace();
+                    },
+                    error: function(xhr) {
+                        outputInput.removeClass('loading');
+
+                        let message = 'Something went wrong while generating content.';
+                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                            message = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                        } else if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        showAlert(message, 'error');
+                    },
+                    complete: function() {
+                        generateBtn.prop('disabled', false);
+                        generateBtnText.text('Generate Content');
+                        feather.replace();
+                    }
+                });
+            });
+
+            saveBtn.on('click', function() {
+                clearAlert();
+
+                if (!latestGenerated.generated_text) {
+                    showAlert('Generate content first before saving.', 'error');
+                    return;
+                }
+
+                saveBtn.prop('disabled', true).html('<i data-feather="loader"></i> Saving...');
+                feather.replace();
+
+                $.ajax({
+                    url: '{{ route('ai.content.save') }}',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(latestGenerated),
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    success: function(response) {
+                        showAlert(response.message || 'Content saved successfully.', 'success');
+                        saveBtn.html('<i data-feather="check"></i> Saved!');
+                        feather.replace();
+
+                        setTimeout(() => {
+                            enableSaveButton();
+                        }, 1400);
+                    },
+                    error: function(xhr) {
+                        let message = 'Failed to save content.';
+                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                            message = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                        } else if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        showAlert(message, 'error');
+                        enableSaveButton();
+                    }
+                });
+            });
+
+            updateStats();
+            feather.replace();
         });
-
-        function updateWordCount(text) {
-            const words = text.trim().split(/\s+/).filter(Boolean).length;
-            wordCount.textContent = words + ' words · ' + text.length + ' characters';
-        }
-
-        function showAlert(message, type = 'error') {
-            alertContainer.innerHTML = `
-                <div class="alert-pro ${type}">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                    </svg>
-                    <span>${message}</span>
-                </div>
-            `;
-        }
-
-        function clearAlert() {
-            alertContainer.innerHTML = '';
-        }
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap');
-
         :root {
-            --page-bg: #f7f6f3;
-            --surface: #ffffff;
-            --border: #e4e2dc;
-            --border-focus: #1a1a1a;
-            --text: #1a1a1a;
-            --text2: #4a4845;
-            --muted: #9b9590;
-            --accent: #1a1a1a;
-            --accent-hover: #333;
-            --tag-bg: #f0efe9;
-            --success-bg: #f0faf4;
-            --success-border: #b4dfc4;
-            --success-text: #166534;
-            --error-bg: #fef5f5;
-            --error-border: #f5c6c6;
-            --error-text: #c0392b;
+            --gc-bg: #f3f7f7;
+            --gc-surface: #ffffff;
+            --gc-surface-soft: #f8fbfb;
+            --gc-border: #d8e4e4;
+            --gc-border-strong: #b8d3d3;
+            --gc-text: #102a2a;
+            --gc-text-soft: #4b6363;
+            --gc-muted: #789090;
+            --gc-accent: #0f766e;
+            --gc-accent-soft: #e6f6f4;
+            --gc-accent-hover: #0b5d57;
+            --gc-shadow: 0 10px 30px rgba(15, 118, 110, 0.08);
+            --gc-radius: 16px;
+            --gc-success-bg: #ecfdf5;
+            --gc-success-border: #bbf7d0;
+            --gc-success-text: #166534;
+            --gc-error-bg: #fef2f2;
+            --gc-error-border: #fecaca;
+            --gc-error-text: #b91c1c;
         }
 
-        .ai-page {
-            min-height: 100vh;
-            background: var(--page-bg);
-            font-family: 'Geist', sans-serif;
-            padding: 3rem 1.5rem 5rem;
+        .gc-topbar {
+            background: linear-gradient(90deg, #ffffff 0%, #f1fbfa 100%);
+            border-bottom: 1px solid var(--gc-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
 
-        .ai-header {
-            max-width: 680px;
-            margin: 0 auto 2.5rem;
+        .gc-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
         }
 
-        .ai-header-eyebrow {
+        .gc-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #14b8a6 0%, #0f766e 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+        }
+
+        .gc-icon-wrap svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .gc-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gc-text);
+        }
+
+        .gc-sub {
+            font-size: 0.76rem;
+            color: var(--gc-muted);
+        }
+
+        .gc-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 0.85rem;
+            padding: 0.32rem 0.8rem;
+            border-radius: 999px;
+            background: var(--gc-accent-soft);
+            color: var(--gc-accent);
+            font-size: 0.74rem;
+            font-weight: 700;
         }
 
-        .ai-header-eyebrow-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--muted);
-        }
-
-        .ai-header h1 {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 400;
-            color: var(--text);
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.6rem;
-        }
-
-        .ai-header h1 em {
-            font-style: italic;
-            color: var(--muted);
-        }
-
-        .ai-header-desc {
-            font-size: 0.9rem;
-            color: var(--text2);
-            line-height: 1.65;
-            font-weight: 300;
-        }
-
-        .alert-pro {
-            max-width: 680px;
-            margin: 0 auto 1.25rem;
-            padding: 0.85rem 1.1rem;
-            border-radius: 10px;
-            font-size: 0.83rem;
-            line-height: 1.55;
-            border: 1px solid;
-            display: flex;
-            gap: 0.7rem;
-            align-items: flex-start;
-        }
-
-        .alert-pro.error {
-            background: var(--error-bg);
-            border-color: var(--error-border);
-            color: var(--error-text);
-        }
-
-        .alert-pro.success {
-            background: var(--success-bg);
-            border-color: var(--success-border);
-            color: var(--success-text);
-        }
-
-        .alert-pro svg {
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .alert-pro ul {
-            margin: 0;
-            padding-left: 1.1rem;
-        }
-
-        .ai-card {
-            max-width: 680px;
+        .gc-page {
+            max-width: 1180px;
             margin: 0 auto;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 12px 40px rgba(0, 0, 0, 0.06);
-        }
-
-        .ai-card-body {
-            padding: 2rem 2rem 1.75rem;
-        }
-
-        .field-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .field-label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--text2);
-            margin-bottom: 0.55rem;
-        }
-
-        .field-hint {
-            font-size: 0.78rem;
-            color: var(--muted);
-            font-weight: 300;
-            margin-bottom: 0.55rem;
-            display: block;
-        }
-
-        .type-selector {
+            padding: 2rem 1.5rem 3rem;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.6rem;
+            grid-template-columns: 250px 1fr;
+            gap: 1.25rem;
         }
 
-        .type-option {
+        .gc-sidebar,
+        .gc-main {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .gc-card,
+        .gc-action-bar,
+        .gc-textarea {
+            box-shadow: var(--gc-shadow);
+        }
+
+        .gc-card {
+            background: var(--gc-surface);
+            border: 1px solid var(--gc-border);
+            border-radius: var(--gc-radius);
+            overflow: hidden;
+        }
+
+        .gc-card-header {
+            padding: 0.95rem 1.1rem;
+            border-bottom: 1px solid var(--gc-border);
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .gc-card-header-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--gc-accent-soft);
+            color: var(--gc-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gc-card-header-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .gc-card-title {
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--gc-text-soft);
+        }
+
+        .gc-card-body {
+            padding: 1rem 1.1rem;
+        }
+
+        .gc-type-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .gc-type-option {
             position: relative;
         }
 
-        .type-option input[type="radio"] {
+        .gc-type-option input {
             position: absolute;
             opacity: 0;
             width: 0;
             height: 0;
         }
 
-        .type-option label {
+        .gc-type-option label {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.9rem 0.5rem;
-            border: 1.5px solid var(--border);
+            gap: 0.7rem;
+            padding: 0.75rem 0.85rem;
+            border: 1.5px solid var(--gc-border);
             border-radius: 10px;
             cursor: pointer;
-            background: var(--page-bg);
+            background: var(--gc-surface-soft);
             transition: all .15s;
-            text-align: center;
         }
 
-        .type-option label:hover {
-            border-color: var(--border-focus);
-            background: #f3f2ee;
+        .gc-type-option label:hover {
+            border-color: var(--gc-accent);
+            background: var(--gc-accent-soft);
         }
 
-        .type-option input:checked+label {
-            border-color: var(--border-focus);
-            background: var(--surface);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        .gc-type-option input:checked+label {
+            border-color: var(--gc-accent);
+            background: var(--gc-accent-soft);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.09);
         }
 
-        .type-icon {
+        .gc-type-icon {
             width: 32px;
             height: 32px;
-            background: var(--tag-bg);
-            border-radius: 8px;
+            flex-shrink: 0;
+            background: #e8ecf2;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--gc-muted);
         }
 
-        .type-icon svg {
+        .gc-type-icon svg {
             width: 15px;
             height: 15px;
-            stroke: var(--text2);
         }
 
-        .type-option input:checked+label .type-icon {
-            background: var(--text);
-        }
-
-        .type-option input:checked+label .type-icon svg {
-            stroke: #fff;
-        }
-
-        .type-label-text {
-            font-size: 0.78rem;
-            font-weight: 500;
-            color: var(--text2);
-            line-height: 1.3;
-        }
-
-        .type-option input:checked+label .type-label-text {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        .prompt-wrap {
-            position: relative;
-        }
-
-        .prompt-wrap svg.prompt-icon {
-            position: absolute;
-            left: 14px;
-            top: 14px;
-            width: 15px;
-            height: 15px;
-            stroke: var(--muted);
-            pointer-events: none;
-        }
-
-        #prompt {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            font-size: 0.9rem;
-            font-family: 'Geist', sans-serif;
-            font-weight: 400;
-            color: var(--text);
-            background: var(--page-bg);
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            outline: none;
-            transition: border-color .15s, box-shadow .15s, background .15s;
-        }
-
-        #prompt::placeholder {
-            color: var(--muted);
-        }
-
-        #prompt:focus {
-            border-color: var(--border-focus);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-        }
-
-        .card-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 0;
-        }
-
-        .ai-card-footer {
-            padding: 1.25rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            background: #fafaf8;
-        }
-
-        .footer-note {
-            font-size: 0.76rem;
-            color: var(--muted);
-            font-weight: 300;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .footer-note svg {
-            width: 13px;
-            height: 13px;
-            stroke: var(--muted);
-            flex-shrink: 0;
-        }
-
-        .btn-generate {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            padding: 0.7rem 1.4rem;
-            background: var(--accent);
+        .gc-type-option input:checked+label .gc-type-icon {
+            background: var(--gc-accent);
             color: #fff;
-            border: none;
-            border-radius: 9px;
-            font-size: 0.85rem;
+        }
+
+        .gc-type-text {
+            line-height: 1.35;
+        }
+
+        .gc-type-label {
+            display: block;
+            font-size: 0.82rem;
             font-weight: 600;
-            font-family: 'Geist', sans-serif;
-            cursor: pointer;
-            transition: background .15s, transform .1s, box-shadow .15s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-            white-space: nowrap;
+            color: var(--gc-text-soft);
         }
 
-        .btn-generate:disabled,
-        .copy-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
+        .gc-type-desc {
+            display: block;
+            font-size: 0.69rem;
+            color: var(--gc-muted);
         }
 
-        .btn-generate svg {
-            width: 15px;
-            height: 15px;
-            stroke: currentColor;
+        .gc-type-option input:checked+label .gc-type-label {
+            color: var(--gc-accent);
         }
 
-        .btn-generate:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
-        }
-
-        .btn-generate:active {
-            transform: translateY(0);
-        }
-
-        .result-panel {
-            max-width: 680px;
-            margin: 1.5rem auto 0;
-        }
-
-        .result-header {
+        .gc-stat-row {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.75rem;
+            align-items: center;
+            padding: 0.52rem 0;
+            border-bottom: 1px solid var(--gc-border);
+        }
+
+        .gc-stat-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .gc-stat-label {
+            font-size: 0.78rem;
+            color: var(--gc-muted);
+        }
+
+        .gc-stat-val {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--gc-text);
+        }
+
+        .gc-editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
 
-        .result-actions {
+        .gc-pane {
             display: flex;
-            gap: 0.5rem;
+            flex-direction: column;
         }
 
-        .result-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--muted);
+        .gc-pane-label {
+            margin-bottom: 0.55rem;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--gc-muted);
+        }
+
+        .gc-pane-actions {
+            display: flex;
             gap: 0.45rem;
         }
 
-        .result-label-tag {
-            background: var(--tag-bg);
-            color: var(--text2);
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.15rem 0.5rem;
-            border-radius: 5px;
-            text-transform: capitalize;
-            letter-spacing: 0;
-        }
-
-        .copy-btn {
+        .gc-pane-action {
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
+            border: none;
+            background: transparent;
+            color: var(--gc-muted);
             font-size: 0.78rem;
-            font-weight: 500;
-            color: var(--text2);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            padding: 0.3rem 0.7rem;
-            cursor: pointer;
-            font-family: 'Geist', sans-serif;
-            transition: all .15s;
+            font-weight: 600;
         }
 
-        .copy-btn svg {
-            width: 12px;
-            height: 12px;
-            stroke: currentColor;
+        .gc-pane-action svg {
+            width: 13px;
+            height: 13px;
         }
 
-        .copy-btn:hover {
-            border-color: var(--border-focus);
-            color: var(--text);
-            background: #f8f7f4;
+        .gc-pane-action:hover:not(:disabled) {
+            color: var(--gc-accent);
         }
 
-        .copy-btn.copied {
-            color: #16a34a;
-            border-color: #b4dfc4;
-            background: var(--success-bg);
-        }
-
-        .save-btn {
-            color: #0f5132;
-        }
-
-        .result-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 28px rgba(0, 0, 0, 0.05);
-            animation: slideUp 0.35s cubic-bezier(.22, .68, 0, 1.2) both;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-box-inner {
-            padding: 1.5rem 1.75rem;
+        .gc-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 1rem 1.1rem;
+            border: 1.5px solid var(--gc-border);
+            border-radius: 12px;
+            background: var(--gc-surface);
+            color: var(--gc-text);
             font-size: 0.9rem;
-            color: var(--text);
-            line-height: 1.75;
-            font-weight: 300;
-            white-space: pre-wrap;
-            word-break: break-word;
-            min-height: 120px;
-            max-height: 400px;
-            overflow-y: auto;
+            line-height: 1.7;
+            resize: vertical;
+            transition: border-color .15s, box-shadow .15s;
         }
 
-        .result-box-inner::-webkit-scrollbar {
-            width: 4px;
+        .gc-textarea:focus {
+            outline: none;
+            border-color: var(--gc-accent);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
         }
 
-        .result-box-inner::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
+        .gc-textarea::placeholder {
+            color: var(--gc-muted);
         }
 
-        .result-box-footer {
-            border-top: 1px solid var(--border);
-            padding: 0.65rem 1.75rem;
+        .gc-textarea[readonly] {
+            background: #fbfefe;
+        }
+
+        .gc-textarea.has-output {
+            border-color: var(--gc-border-strong);
+            background: #ffffff;
+        }
+
+        .gc-textarea.loading {
+            background: linear-gradient(90deg, #eef7f7 25%, #e2f1ef 50%, #eef7f7 75%);
+            background-size: 400px 100%;
+            animation: gcShimmer 1.4s ease infinite;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .gc-action-bar {
+            background: var(--gc-surface);
+            border: 1px solid var(--gc-border);
+            border-radius: var(--gc-radius);
+            padding: 1rem 1.2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #fafaf8;
+            gap: 1rem;
         }
 
-        .word-count {
-            font-size: 0.73rem;
-            color: var(--muted);
-            font-weight: 400;
+        .gc-action-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 640px) {
-            .type-selector {
+        .gc-selected-type {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--gc-text-soft);
+        }
+
+        .gc-selected-type span {
+            margin-left: 0.3rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            background: var(--gc-accent-soft);
+            color: var(--gc-accent);
+        }
+
+        .gc-tip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.76rem;
+            color: var(--gc-muted);
+        }
+
+        .gc-tip svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .gc-btn-generate {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.72rem 1.35rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--gc-accent);
+            color: #fff;
+            font-weight: 700;
+            transition: all .15s;
+        }
+
+        .gc-btn-generate:hover:not(:disabled) {
+            background: var(--gc-accent-hover);
+        }
+
+        .gc-btn-generate svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .gc-copy-btn.copied {
+            color: var(--gc-accent);
+        }
+
+        .gc-btn-generate:disabled,
+        .gc-pane-action:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .gc-alert {
+            margin-bottom: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            border: 1px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-size: 0.84rem;
+            line-height: 1.55;
+        }
+
+        .gc-alert svg {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .gc-alert.success {
+            background: var(--gc-success-bg);
+            border-color: var(--gc-success-border);
+            color: var(--gc-success-text);
+        }
+
+        .gc-alert.error {
+            background: var(--gc-error-bg);
+            border-color: var(--gc-error-border);
+            color: var(--gc-error-text);
+        }
+
+        @keyframes gcShimmer {
+            0% {
+                background-position: -400px 0;
+            }
+
+            100% {
+                background-position: 400px 0;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .gc-page {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gc-topbar,
+            .gc-action-bar {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .gc-editor-grid {
                 grid-template-columns: 1fr;
             }
 
-            .ai-card-footer,
-            .result-header {
+            .gc-action-bar {
                 flex-direction: column;
                 align-items: stretch;
             }
 
-            .result-actions {
+            .gc-pane-label {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .gc-pane-actions {
+                width: 100%;
                 justify-content: flex-end;
             }
         }
     </style>
-@endsection
+@endpush
