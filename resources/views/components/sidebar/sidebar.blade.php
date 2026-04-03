@@ -2,6 +2,11 @@
     <!-- Sidenav Menu Heading (Core)-->
     <div class="sidenav-menu-heading">Core</div>
 
+    <a class="nav-link" href="{{ route('dashboard') }}">
+        <div class="nav-link-icon"><i data-feather="bar-chart"></i></div>
+        Dashboard
+    </a>
+
     <!-- Sidenav Accordion (Dashboard)-->
     <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseDashboards"
         aria-expanded="{{ request()->routeIs('admin.users.*') ? 'true' : 'false' }}" aria-controls="collapseDashboards">
@@ -123,8 +128,9 @@
         </nav>
     </div>
 
-    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseAnalytics"
-        aria-expanded="{{ request()->routeIs('analytics.*') ? 'true' : 'false' }}" aria-controls="collapseAnalytics">
+    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse"
+        data-bs-target="#collapseAnalytics" aria-expanded="{{ request()->routeIs('analytics.*') ? 'true' : 'false' }}"
+        aria-controls="collapseAnalytics">
         <div class="nav-link-icon"><i data-feather="bar-chart-2"></i></div>
         Analytics & Insights
         <div class="sidenav-collapse-arrow">

@@ -10,11 +10,11 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     if (auth()->user()->hasRole('admin')) {
-        return view('layouts.admin');
+        return redirect()->route('dashboard');
     } else if (auth()->user()->hasRole('editor')) {
-        return "editor";
+        return redirect()->route('dashboard');
     } else {
-        return "viewer";
+        return redirect()->route('dashboard');
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 

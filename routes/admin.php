@@ -5,6 +5,7 @@ use App\Http\Controllers\AIContentController;
 use App\Http\Controllers\AIContentEditController;
 use App\Http\Controllers\AITranslationController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExportSharingController;
 use App\Http\Controllers\VersionControlController;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,12 @@ Route::middleware(['auth'])
     });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
+
+    // -------------------------------------- dashboard --------------------------------------
+
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // -------------------------------------- ai content --------------------------------------
     Route::get('/admin/ai-content', [AIContentController::class, 'index'])->name('ai.content');
     Route::post('/admin/ai-content/generate', [AIContentController::class, 'generate'])->name('ai.content.generate');
     Route::post('/admin/ai-content/save', [AIContentController::class, 'save'])->name('ai.content.save');
