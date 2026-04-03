@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canDeleteRecords = $user?->hasRole('admin');
+    @endphp
     <main>
         <div class="lp-topbar">
             <div class="lp-topbar-left">
@@ -28,7 +33,7 @@
                                 <th>Content Type</th>
                                 <th>Prompt</th>
                                 <th>Generated Text</th>
-                                <th>Action</th>
+                                <th>{{ $canEditRecords || $canDeleteRecords ? 'Action' : 'View' }}</th>
                             </tr>
                         </thead>
 
@@ -45,17 +50,21 @@
                                             title="View Content">
                                             <i data-feather="eye"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-danger delete-content-btn"
-                                            data-id="{{ $content->id }}" title="Delete">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-warning edit-content-btn"
-                                            data-id="{{ $content->id }}" data-type="{{ $content->content_type }}"
-                                            data-prompt="{{ htmlspecialchars($content->prompt, ENT_QUOTES) }}"
-                                            data-text="{{ htmlspecialchars($content->generated_text, ENT_QUOTES) }}"
-                                            title="Edit">
-                                            <i data-feather="edit"></i>
-                                        </button>
+                                        @if ($canDeleteRecords)
+                                            <button class="btn btn-xs btn-danger delete-content-btn"
+                                                data-id="{{ $content->id }}" title="Delete">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        @endif
+                                        @if ($canEditRecords)
+                                            <button class="btn btn-xs btn-warning edit-content-btn"
+                                                data-id="{{ $content->id }}" data-type="{{ $content->content_type }}"
+                                                data-prompt="{{ htmlspecialchars($content->prompt, ENT_QUOTES) }}"
+                                                data-text="{{ htmlspecialchars($content->generated_text, ENT_QUOTES) }}"
+                                                title="Edit">
+                                                <i data-feather="edit"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -86,18 +95,22 @@
                     title="View Content">
                     <i data-feather="eye"></i>
                 </button>
-                <button class="btn btn-xs btn-danger delete-content-btn"
-                    data-id="${content.id}" title="Delete">
-                    <i data-feather="trash-2"></i>
-                </button>
-                <button class="btn btn-xs btn-warning edit-content-btn"
-                    data-id="${content.id}"
-                    data-type="${escapeHtml(content.content_type)}"
-                    data-prompt="${escapeHtml(content.prompt)}"
-                    data-text="${escapeHtml(content.generated_text)}"
-                    title="Edit">
-                    <i data-feather="edit"></i>
-                </button>
+                @if ($canDeleteRecords)
+                    <button class="btn btn-xs btn-danger delete-content-btn"
+                        data-id="${content.id}" title="Delete">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                @endif
+                @if ($canEditRecords)
+                    <button class="btn btn-xs btn-warning edit-content-btn"
+                        data-id="${content.id}"
+                        data-type="${escapeHtml(content.content_type)}"
+                        data-prompt="${escapeHtml(content.prompt)}"
+                        data-text="${escapeHtml(content.generated_text)}"
+                        title="Edit">
+                        <i data-feather="edit"></i>
+                    </button>
+                @endif
             `;
         }
 

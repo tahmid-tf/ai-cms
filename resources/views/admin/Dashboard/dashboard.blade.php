@@ -1,19 +1,33 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $isAdmin = $user?->hasRole('admin');
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canViewLists = $user?->hasAnyRole(['admin', 'editor', 'viewer']);
+    @endphp
     <main>
         <div class="db-shell">
             <section class="db-hero">
                 <div class="db-hero-copy">
-                    <div class="db-kicker">Admin Overview</div>
+                    <div class="db-kicker">{{ $isAdmin ? 'Admin Overview' : ($canEditRecords ? 'Editor Overview' : 'Viewer Overview') }}</div>
                     <h1>AI CMS command center for content, performance, and publishing.</h1>
                     <p>
                         Monitor AI workflows, editorial activity, audience engagement, and publishing momentum from a
                         single dashboard built around your real project data.
                     </p>
                     <div class="db-hero-actions">
-                        <a href="{{ route('ai.content') }}" class="db-btn db-btn-primary">Generate Content</a>
-                        <a href="{{ route('analytics.index') }}" class="db-btn db-btn-light">Open Analytics</a>
+                        @if ($isAdmin)
+                            <a href="{{ route('ai.content') }}" class="db-btn db-btn-primary">Generate Content</a>
+                            <a href="{{ route('analytics.index') }}" class="db-btn db-btn-light">Open Analytics</a>
+                        @elseif ($canEditRecords)
+                            <a href="{{ route('version_control.list') }}" class="db-btn db-btn-primary">Open Content List</a>
+                            <a href="{{ route('analytics.insights_list') }}" class="db-btn db-btn-light">Open Insights</a>
+                        @else
+                            <a href="{{ route('ai.content.list') }}" class="db-btn db-btn-primary">Browse Content</a>
+                            <a href="{{ route('version_control.list') }}" class="db-btn db-btn-light">View Versions</a>
+                        @endif
                     </div>
                 </div>
                 <div class="db-hero-panel">
@@ -135,7 +149,9 @@
                             <div class="db-card-kicker">Publishing</div>
                             <h3>Recent version-controlled content</h3>
                         </div>
-                        <a href="{{ route('version_control.list') }}" class="db-inline-link">View all</a>
+                        @if ($canViewLists)
+                            <a href="{{ route('version_control.list') }}" class="db-inline-link">View all</a>
+                        @endif
                     </div>
                     <div class="db-list">
                         @forelse ($recentContents as $content)
@@ -160,7 +176,9 @@
                             <div class="db-card-kicker">AI Insights</div>
                             <h3>Latest recommendations</h3>
                         </div>
-                        <a href="{{ route('analytics.insights_list') }}" class="db-inline-link">Manage</a>
+                        @if ($canViewLists)
+                            <a href="{{ route('analytics.insights_list') }}" class="db-inline-link">{{ $canEditRecords ? 'Manage' : 'View list' }}</a>
+                        @endif
                     </div>
                     <div class="db-list">
                         @forelse ($recentInsights as $insight)
@@ -180,7 +198,9 @@
                             <div class="db-card-kicker">Localization</div>
                             <h3>Recent translations</h3>
                         </div>
-                        <a href="{{ route('ai_translation.list') }}" class="db-inline-link">Open list</a>
+                        @if ($canViewLists)
+                            <a href="{{ route('ai_translation.list') }}" class="db-inline-link">Open list</a>
+                        @endif
                     </div>
                     <div class="db-list">
                         @forelse ($recentTranslations as $translation)
@@ -206,26 +226,35 @@
                         </div>
                     </div>
                     <div class="db-quick-grid">
-                        <a href="{{ route('ai.content') }}" class="db-quick-card">
-                            <i data-feather="file-text"></i>
-                            <span>Content Generation</span>
-                        </a>
-                        <a href="{{ route('ai_editor.editor') }}" class="db-quick-card">
-                            <i data-feather="edit"></i>
-                            <span>Content Editing</span>
-                        </a>
-                        <a href="{{ route('ai_translation.index') }}" class="db-quick-card">
-                            <i data-feather="languages"></i>
-                            <span>Translation</span>
-                        </a>
+                        @if ($isAdmin)
+                            <a href="{{ route('ai.content') }}" class="db-quick-card">
+                                <i data-feather="file-text"></i>
+                                <span>Content Generation</span>
+                            </a>
+                            <a href="{{ route('ai_editor.editor') }}" class="db-quick-card">
+                                <i data-feather="edit"></i>
+                                <span>Content Editing</span>
+                            </a>
+                            <a href="{{ route('ai_translation.index') }}" class="db-quick-card">
+                                <i data-feather="languages"></i>
+                                <span>Translation</span>
+                            </a>
+                        @endif
                         <a href="{{ route('version_control.list') }}" class="db-quick-card">
                             <i data-feather="git-branch"></i>
                             <span>Version Control</span>
                         </a>
-                        <a href="{{ route('analytics.index') }}" class="db-quick-card">
-                            <i data-feather="bar-chart-2"></i>
-                            <span>Analytics</span>
-                        </a>
+                        @if ($isAdmin)
+                            <a href="{{ route('analytics.index') }}" class="db-quick-card">
+                                <i data-feather="bar-chart-2"></i>
+                                <span>Analytics</span>
+                            </a>
+                        @else
+                            <a href="{{ route('analytics.insights_list') }}" class="db-quick-card">
+                                <i data-feather="message-square"></i>
+                                <span>Insights List</span>
+                            </a>
+                        @endif
                         <a href="{{ route('export_sharing.index') }}" class="db-quick-card">
                             <i data-feather="share-2"></i>
                             <span>Export & Sharing</span>

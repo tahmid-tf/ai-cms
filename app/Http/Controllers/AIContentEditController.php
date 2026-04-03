@@ -70,7 +70,7 @@ class AIContentEditController extends Controller
 
     public function list()
     {
-        $contentEdits = ContentEdit::where('user_id', Auth::id())->latest()->get();
+        $contentEdits = ContentEdit::latest()->get();
         return view('admin.ai_edit_contents_list', compact('contentEdits'));
     }
 
@@ -90,7 +90,7 @@ class AIContentEditController extends Controller
             ], 422);
         }
 
-        $contentEdit = ContentEdit::where('user_id', Auth::id())->findOrFail($id);
+        $contentEdit = ContentEdit::findOrFail($id);
 
         $contentEdit->update([
             'original_content' => $request->original_content,
@@ -107,7 +107,7 @@ class AIContentEditController extends Controller
 
     public function destroy($id)
     {
-        $contentEdit = ContentEdit::where('user_id', Auth::id())->findOrFail($id);
+        $contentEdit = ContentEdit::findOrFail($id);
         $contentEdit->delete();
 
         return response()->json([

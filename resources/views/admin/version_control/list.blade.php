@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canDeleteRecords = $user?->hasRole('admin');
+    @endphp
     <main>
         <div class="lp-topbar">
             <div class="lp-topbar-left">
@@ -28,7 +33,7 @@
                                 <th>Status</th>
                                 <th>Current Version</th>
                                 <th>Updated At</th>
-                                <th>Action</th>
+                                <th>{{ $canEditRecords || $canDeleteRecords ? 'Action' : 'View' }}</th>
                             </tr>
                         </thead>
 
@@ -59,18 +64,22 @@
                                             title="History">
                                             <i data-feather="clock"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-warning edit-version-content-btn"
-                                            data-id="{{ $content->id }}"
-                                            data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
-                                            data-status="{{ $content->status }}"
-                                            data-content="{{ htmlspecialchars($content->content, ENT_QUOTES) }}"
-                                            data-version="{{ $content->current_version_id ?: '' }}" title="Edit">
-                                            <i data-feather="edit"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-danger delete-version-content-btn"
-                                            data-id="{{ $content->id }}" title="Delete">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
+                                        @if ($canEditRecords)
+                                            <button class="btn btn-xs btn-warning edit-version-content-btn"
+                                                data-id="{{ $content->id }}"
+                                                data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
+                                                data-status="{{ $content->status }}"
+                                                data-content="{{ htmlspecialchars($content->content, ENT_QUOTES) }}"
+                                                data-version="{{ $content->current_version_id ?: '' }}" title="Edit">
+                                                <i data-feather="edit"></i>
+                                            </button>
+                                        @endif
+                                        @if ($canDeleteRecords)
+                                            <button class="btn btn-xs btn-danger delete-version-content-btn"
+                                                data-id="{{ $content->id }}" title="Delete">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -113,24 +122,28 @@
                     data-title="${escapeHtml(content.title)}" title="History">
                     <i data-feather="clock"></i>
                 </button>
-                <button class="btn btn-xs btn-warning edit-version-content-btn"
-                    data-id="${content.id}"
-                    data-title="${escapeHtml(content.title)}"
-                    data-status="${escapeHtml(content.status)}"
-                    data-content="${escapeHtml(content.content)}"
-                    data-version="${escapeHtml(currentVersion)}" title="Edit">
-                    <i data-feather="edit"></i>
-                </button>
-                <button class="btn btn-xs btn-danger delete-version-content-btn"
-                    data-id="${content.id}" title="Delete">
-                    <i data-feather="trash-2"></i>
-                </button>
+                @if ($canEditRecords)
+                    <button class="btn btn-xs btn-warning edit-version-content-btn"
+                        data-id="${content.id}"
+                        data-title="${escapeHtml(content.title)}"
+                        data-status="${escapeHtml(content.status)}"
+                        data-content="${escapeHtml(content.content)}"
+                        data-version="${escapeHtml(currentVersion)}" title="Edit">
+                        <i data-feather="edit"></i>
+                    </button>
+                @endif
+                @if ($canDeleteRecords)
+                    <button class="btn btn-xs btn-danger delete-version-content-btn"
+                        data-id="${content.id}" title="Delete">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                @endif
             `;
         }
 
         function renderHistoryRows(contentId, versions) {
             if (!versions.length) {
-                return `<tr><td colspan="5" class="text-center text-muted py-4">No version history found.</td></tr>`;
+                return `<tr><td colspan="{{ $canEditRecords ? 5 : 4 }}" class="text-center text-muted py-4">No version history found.</td></tr>`;
             }
 
             return versions.map((version) => `
@@ -146,12 +159,14 @@
                             View
                         </button>
                     </td>
-                    <td class="vc-history-action-cell">
-                        <button class="btn btn-sm btn-success vc-history-action-btn restore-history-version-btn"
-                            data-content-id="${contentId}" data-version-id="${version.id}">
-                            Restore
-                        </button>
-                    </td>
+                    @if ($canEditRecords)
+                        <td class="vc-history-action-cell">
+                            <button class="btn btn-sm btn-success vc-history-action-btn restore-history-version-btn"
+                                data-content-id="${contentId}" data-version-id="${version.id}">
+                                Restore
+                            </button>
+                        </td>
+                    @endif
                 </tr>
             `).join('');
         }
@@ -414,7 +429,9 @@
                                                         <th>Type</th>
                                                         <th>Edited Date</th>
                                                         <th>View</th>
-                                                        <th>Restore</th>
+                                                        @if ($canEditRecords)
+                                                            <th>Restore</th>
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 <tbody>

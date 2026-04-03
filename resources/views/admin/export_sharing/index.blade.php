@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canManageExports = $user?->hasRole('admin');
+    @endphp
     <main>
         <div class="es-topbar">
             <div class="es-topbar-left">
@@ -27,7 +32,7 @@
                                 <th>Title</th>
                                 <th>Status</th>
                                 <th>Updated</th>
-                                <th>Action</th>
+                                <th>{{ $canEditRecords || $canManageExports ? 'Action' : 'View' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,33 +58,37 @@
                                             title="View">
                                             <i data-feather="eye"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-warning edit-export-content-btn"
-                                            data-id="{{ $content->id }}"
-                                            data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
-                                            data-status="{{ $content->status }}"
-                                            data-content="{{ htmlspecialchars($content->content, ENT_QUOTES) }}"
-                                            title="Edit">
-                                            <i data-feather="edit"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-danger delete-export-content-btn"
-                                            data-id="{{ $content->id }}" title="Delete">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
-                                        <a class="btn btn-xs btn-outline-danger" href="{{ route('export_sharing.pdf', $content->id) }}"
-                                            title="Export PDF">
-                                            PDF
-                                        </a>
-                                        <a class="btn btn-xs btn-outline-primary" href="{{ route('export_sharing.word', $content->id) }}"
-                                            title="Export Word">
-                                            Word
-                                        </a>
-                                        <button class="btn btn-xs btn-outline-success share-export-content-btn"
-                                            data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
-                                            data-status="{{ $content->status }}"
-                                            data-url="{{ $publicUrl }}"
-                                            title="Share">
-                                            Share
-                                        </button>
+                                        @if ($canEditRecords)
+                                            <button class="btn btn-xs btn-warning edit-export-content-btn"
+                                                data-id="{{ $content->id }}"
+                                                data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
+                                                data-status="{{ $content->status }}"
+                                                data-content="{{ htmlspecialchars($content->content, ENT_QUOTES) }}"
+                                                title="Edit">
+                                                <i data-feather="edit"></i>
+                                            </button>
+                                        @endif
+                                        @if ($canManageExports)
+                                            <button class="btn btn-xs btn-danger delete-export-content-btn"
+                                                data-id="{{ $content->id }}" title="Delete">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                            <a class="btn btn-xs btn-outline-danger"
+                                                href="{{ route('export_sharing.pdf', $content->id) }}" title="Export PDF">
+                                                PDF
+                                            </a>
+                                            <a class="btn btn-xs btn-outline-primary"
+                                                href="{{ route('export_sharing.word', $content->id) }}" title="Export Word">
+                                                Word
+                                            </a>
+                                            <button class="btn btn-xs btn-outline-success share-export-content-btn"
+                                                data-title="{{ htmlspecialchars($content->title, ENT_QUOTES) }}"
+                                                data-status="{{ $content->status }}"
+                                                data-url="{{ $publicUrl }}"
+                                                title="Share">
+                                                Share
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -111,27 +120,31 @@
                     title="View">
                     <i data-feather="eye"></i>
                 </button>
-                <button class="btn btn-xs btn-warning edit-export-content-btn"
-                    data-id="${content.id}"
-                    data-title="${escapeHtml(content.title)}"
-                    data-status="${escapeHtml(content.status)}"
-                    data-content="${escapeHtml(content.content)}"
-                    title="Edit">
-                    <i data-feather="edit"></i>
-                </button>
-                <button class="btn btn-xs btn-danger delete-export-content-btn"
-                    data-id="${content.id}" title="Delete">
-                    <i data-feather="trash-2"></i>
-                </button>
-                <a class="btn btn-xs btn-outline-danger" href="/export-sharing/${content.id}/pdf" title="Export PDF">PDF</a>
-                <a class="btn btn-xs btn-outline-primary" href="/export-sharing/${content.id}/word" title="Export Word">Word</a>
-                <button class="btn btn-xs btn-outline-success share-export-content-btn"
-                    data-title="${escapeHtml(content.title)}"
-                    data-status="${escapeHtml(content.status)}"
-                    data-url="${escapeHtml(publicUrl)}"
-                    title="Share">
-                    Share
-                </button>
+                @if ($canEditRecords)
+                    <button class="btn btn-xs btn-warning edit-export-content-btn"
+                        data-id="${content.id}"
+                        data-title="${escapeHtml(content.title)}"
+                        data-status="${escapeHtml(content.status)}"
+                        data-content="${escapeHtml(content.content)}"
+                        title="Edit">
+                        <i data-feather="edit"></i>
+                    </button>
+                @endif
+                @if ($canManageExports)
+                    <button class="btn btn-xs btn-danger delete-export-content-btn"
+                        data-id="${content.id}" title="Delete">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                    <a class="btn btn-xs btn-outline-danger" href="/export-sharing/${content.id}/pdf" title="Export PDF">PDF</a>
+                    <a class="btn btn-xs btn-outline-primary" href="/export-sharing/${content.id}/word" title="Export Word">Word</a>
+                    <button class="btn btn-xs btn-outline-success share-export-content-btn"
+                        data-title="${escapeHtml(content.title)}"
+                        data-status="${escapeHtml(content.status)}"
+                        data-url="${escapeHtml(publicUrl)}"
+                        title="Share">
+                        Share
+                    </button>
+                @endif
             `;
         }
 

@@ -2,6 +2,8 @@
 
 AI CMS is a Laravel-based admin content platform that combines AI-assisted content workflows with practical editorial tools. The project currently includes AI content generation, AI-powered editing, AI translation, version control, draft management, analytics tracking, AI-powered content insights, and export/sharing tools, all wrapped in an admin dashboard UI with asynchronous table actions.
 
+The platform also includes role-based access control for `admin`, `editor`, and `viewer` users so navigation, route access, and table actions match each user's responsibilities.
+
 ## Overview
 
 This project is designed to help content teams:
@@ -63,6 +65,7 @@ This project is designed to help content teams:
 - SweetAlert-powered async modal operations
 - Inline modal editing for multiple modules
 - Sidebar navigation for all major AI and content workflows
+- Role-aware dashboard shortcuts and quick-access cards
 
 ### 6. Analytics & Insights
 
@@ -107,6 +110,21 @@ The application currently includes these admin areas:
 - Analytics Dashboard
 - Insights List
 - Export & Sharing
+
+## Role-Based Access
+
+The application currently uses three roles:
+
+- `admin`: full access to all modules, creation pages, AI actions, delete actions, exports, sharing, analytics dashboard, and user management
+- `editor`: access to dashboard, list pages, version history, and record editing/restoring where supported
+- `viewer`: access to dashboard and read-only list pages only
+
+Current rules include:
+
+- only `admin` can access the `Users` section
+- only `admin` can access create/generate/process pages such as content generation, content editing, translation processing, analytics generation, and exports
+- `editor` can work with list/history-oriented flows and update records where allowed
+- `viewer` can open tables and inspect records, but does not get edit/delete controls
 
 ## Tech Stack
 
@@ -260,6 +278,7 @@ npm run dev
 2. AI generates content from prompt and type
 3. Result can be saved
 4. Saved content appears in the content list
+5. Editors and viewers can access the saved list based on their role permissions
 
 ### Content Edit Flow
 
@@ -267,7 +286,8 @@ npm run dev
 2. Chooses an edit mode
 3. AI improves the content
 4. Result is stored in `content_edits`
-5. Admin can manage records from the edit list
+5. Admin and editors can manage records from the edit list
+6. Viewers can inspect records from the list in read-only mode
 
 ### Translation Flow
 
@@ -275,7 +295,8 @@ npm run dev
 2. Selects target language
 3. AI returns translated output
 4. Result is stored in `translations`
-5. Admin can manage records from the translation list
+5. Admin and editors can manage records from the translation list
+6. Viewers can inspect the translation list in read-only mode
 
 ### Version Control Flow
 
@@ -284,6 +305,8 @@ npm run dev
 3. Every update creates another version snapshot
 4. History modal shows previous versions
 5. Restore replaces current content with a selected version and preserves the previous current state
+6. Editors can review history, edit content, and restore versions
+7. Viewers can open the version list and inspect history without modification actions
 
 ### Analytics Flow
 
@@ -292,6 +315,8 @@ npm run dev
 3. Aggregate metrics are shown instead of raw event rows
 4. Charts visualize overall performance
 5. AI insights can be generated for a content item and stored in `content_insights`
+6. Editors can manage the stored insights list
+7. Viewers can read the insights list without edit/delete controls
 
 ### Export & Sharing Flow
 
@@ -344,6 +369,7 @@ Possible next improvements:
 - Analytics currently stores aggregate values in `content_analytics` rather than a separate raw `content_events` table.
 - Social platforms such as Facebook and LinkedIn require a real public URL. `localhost` links will not work for external sharing.
 - Public sharing is currently limited to content with `published` status.
+- Sidebar visibility, route access, and DataTable action buttons are role-aware and currently aligned with the `admin`, `editor`, and `viewer` permissions described above.
 
 ## License
 

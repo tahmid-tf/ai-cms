@@ -126,7 +126,7 @@ class AIContentController extends Controller
 
     public function update(Request $request, $id)
     {
-        $content = AIContent::where('user_id', auth()->id())->findOrFail($id);
+        $content = AIContent::findOrFail($id);
 
         $content->update([
             'content_type'   => $request->content_type,
@@ -143,13 +143,13 @@ class AIContentController extends Controller
 
     public function list()
     {
-        $contents = AIContent::where('user_id', Auth::id())->get();
+        $contents = AIContent::latest()->get();
         return view('admin.ai_contents_list', compact('contents'));
     }
 
     public function destroy($id)
     {
-        $content = AIContent::where('user_id', auth()->id())->findOrFail($id);
+        $content = AIContent::findOrFail($id);
         $content->delete();
 
         return response()->json([

@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canDeleteRecords = $user?->hasRole('admin');
+    @endphp
     <main>
         <div class="lp-topbar">
             <div class="lp-topbar-left">
@@ -28,7 +33,7 @@
                                 <th>Edit Type</th>
                                 <th>Original Content</th>
                                 <th>Edited Content</th>
-                                <th>Action</th>
+                                <th>{{ $canEditRecords || $canDeleteRecords ? 'Action' : 'View' }}</th>
                             </tr>
                         </thead>
 
@@ -46,18 +51,22 @@
                                             data-type="{{ $contentEdit->edit_type }}" title="View">
                                             <i data-feather="eye"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-danger delete-content-edit-btn"
-                                            data-id="{{ $contentEdit->id }}" title="Delete">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-warning edit-content-edit-btn"
-                                            data-id="{{ $contentEdit->id }}"
-                                            data-type="{{ $contentEdit->edit_type }}"
-                                            data-original="{{ htmlspecialchars($contentEdit->original_content, ENT_QUOTES) }}"
-                                            data-edited="{{ htmlspecialchars($contentEdit->edited_content, ENT_QUOTES) }}"
-                                            title="Edit">
-                                            <i data-feather="edit"></i>
-                                        </button>
+                                        @if ($canDeleteRecords)
+                                            <button class="btn btn-xs btn-danger delete-content-edit-btn"
+                                                data-id="{{ $contentEdit->id }}" title="Delete">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        @endif
+                                        @if ($canEditRecords)
+                                            <button class="btn btn-xs btn-warning edit-content-edit-btn"
+                                                data-id="{{ $contentEdit->id }}"
+                                                data-type="{{ $contentEdit->edit_type }}"
+                                                data-original="{{ htmlspecialchars($contentEdit->original_content, ENT_QUOTES) }}"
+                                                data-edited="{{ htmlspecialchars($contentEdit->edited_content, ENT_QUOTES) }}"
+                                                title="Edit">
+                                                <i data-feather="edit"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -98,18 +107,22 @@
                     title="View">
                     <i data-feather="eye"></i>
                 </button>
-                <button class="btn btn-xs btn-danger delete-content-edit-btn"
-                    data-id="${contentEdit.id}" title="Delete">
-                    <i data-feather="trash-2"></i>
-                </button>
-                <button class="btn btn-xs btn-warning edit-content-edit-btn"
-                    data-id="${contentEdit.id}"
-                    data-type="${escapeHtml(contentEdit.edit_type)}"
-                    data-original="${escapeHtml(contentEdit.original_content)}"
-                    data-edited="${escapeHtml(contentEdit.edited_content)}"
-                    title="Edit">
-                    <i data-feather="edit"></i>
-                </button>
+                @if ($canDeleteRecords)
+                    <button class="btn btn-xs btn-danger delete-content-edit-btn"
+                        data-id="${contentEdit.id}" title="Delete">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                @endif
+                @if ($canEditRecords)
+                    <button class="btn btn-xs btn-warning edit-content-edit-btn"
+                        data-id="${contentEdit.id}"
+                        data-type="${escapeHtml(contentEdit.edit_type)}"
+                        data-original="${escapeHtml(contentEdit.original_content)}"
+                        data-edited="${escapeHtml(contentEdit.edited_content)}"
+                        title="Edit">
+                        <i data-feather="edit"></i>
+                    </button>
+                @endif
             `;
         }
 

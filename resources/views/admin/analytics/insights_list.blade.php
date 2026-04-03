@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canDeleteRecords = $user?->hasRole('admin');
+    @endphp
     <main>
         <div class="lp-topbar">
             <div class="lp-topbar-left">
@@ -27,7 +32,7 @@
                                 <th>Content</th>
                                 <th>Insight</th>
                                 <th>Created</th>
-                                <th>Action</th>
+                                <th>{{ $canEditRecords || $canDeleteRecords ? 'Action' : 'View' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,17 +49,21 @@
                                             title="View">
                                             <i data-feather="eye"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-warning edit-insight-btn"
-                                            data-id="{{ $insight->id }}"
-                                            data-content-title="{{ htmlspecialchars($insight->content_title, ENT_QUOTES) }}"
-                                            data-insight="{{ htmlspecialchars($insight->insight_text, ENT_QUOTES) }}"
-                                            title="Edit">
-                                            <i data-feather="edit"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-danger delete-insight-btn"
-                                            data-id="{{ $insight->id }}" title="Delete">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
+                                        @if ($canEditRecords)
+                                            <button class="btn btn-xs btn-warning edit-insight-btn"
+                                                data-id="{{ $insight->id }}"
+                                                data-content-title="{{ htmlspecialchars($insight->content_title, ENT_QUOTES) }}"
+                                                data-insight="{{ htmlspecialchars($insight->insight_text, ENT_QUOTES) }}"
+                                                title="Edit">
+                                                <i data-feather="edit"></i>
+                                            </button>
+                                        @endif
+                                        @if ($canDeleteRecords)
+                                            <button class="btn btn-xs btn-danger delete-insight-btn"
+                                                data-id="{{ $insight->id }}" title="Delete">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -84,17 +93,21 @@
                     title="View">
                     <i data-feather="eye"></i>
                 </button>
-                <button class="btn btn-xs btn-warning edit-insight-btn"
-                    data-id="${insight.id}"
-                    data-content-title="${escapeHtml(insight.content_title)}"
-                    data-insight="${escapeHtml(insight.insight_text)}"
-                    title="Edit">
-                    <i data-feather="edit"></i>
-                </button>
-                <button class="btn btn-xs btn-danger delete-insight-btn"
-                    data-id="${insight.id}" title="Delete">
-                    <i data-feather="trash-2"></i>
-                </button>
+                @if ($canEditRecords)
+                    <button class="btn btn-xs btn-warning edit-insight-btn"
+                        data-id="${insight.id}"
+                        data-content-title="${escapeHtml(insight.content_title)}"
+                        data-insight="${escapeHtml(insight.insight_text)}"
+                        title="Edit">
+                        <i data-feather="edit"></i>
+                    </button>
+                @endif
+                @if ($canDeleteRecords)
+                    <button class="btn btn-xs btn-danger delete-insight-btn"
+                        data-id="${insight.id}" title="Delete">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                @endif
             `;
         }
 

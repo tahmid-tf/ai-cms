@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canEditRecords = $user?->hasAnyRole(['admin', 'editor']);
+        $canDeleteRecords = $user?->hasRole('admin');
+    @endphp
     <main>
         <div class="lp-topbar">
             <div class="lp-topbar-left">
@@ -28,7 +33,7 @@
                                 <th>Source Language</th>
                                 <th>Original Content</th>
                                 <th>Translated Content</th>
-                                <th>Action</th>
+                                <th>{{ $canEditRecords || $canDeleteRecords ? 'Action' : 'View' }}</th>
                             </tr>
                         </thead>
 
@@ -48,18 +53,22 @@
                                             data-target="{{ $translation->target_language }}" title="View">
                                             <i data-feather="eye"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-danger delete-translation-btn"
-                                            data-id="{{ $translation->id }}" title="Delete">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
-                                        <button class="btn btn-xs btn-warning edit-translation-btn"
-                                            data-id="{{ $translation->id }}"
-                                            data-original="{{ htmlspecialchars($translation->original_content, ENT_QUOTES) }}"
-                                            data-translated="{{ htmlspecialchars($translation->translated_content, ENT_QUOTES) }}"
-                                            data-source="{{ htmlspecialchars($translation->source_language ?? '', ENT_QUOTES) }}"
-                                            data-target="{{ $translation->target_language }}" title="Edit">
-                                            <i data-feather="edit"></i>
-                                        </button>
+                                        @if ($canDeleteRecords)
+                                            <button class="btn btn-xs btn-danger delete-translation-btn"
+                                                data-id="{{ $translation->id }}" title="Delete">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        @endif
+                                        @if ($canEditRecords)
+                                            <button class="btn btn-xs btn-warning edit-translation-btn"
+                                                data-id="{{ $translation->id }}"
+                                                data-original="{{ htmlspecialchars($translation->original_content, ENT_QUOTES) }}"
+                                                data-translated="{{ htmlspecialchars($translation->translated_content, ENT_QUOTES) }}"
+                                                data-source="{{ htmlspecialchars($translation->source_language ?? '', ENT_QUOTES) }}"
+                                                data-target="{{ $translation->target_language }}" title="Edit">
+                                                <i data-feather="edit"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -101,19 +110,23 @@
                     title="View">
                     <i data-feather="eye"></i>
                 </button>
-                <button class="btn btn-xs btn-danger delete-translation-btn"
-                    data-id="${translation.id}" title="Delete">
-                    <i data-feather="trash-2"></i>
-                </button>
-                <button class="btn btn-xs btn-warning edit-translation-btn"
-                    data-id="${translation.id}"
-                    data-original="${escapeHtml(translation.original_content)}"
-                    data-translated="${escapeHtml(translation.translated_content)}"
-                    data-source="${escapeHtml(translation.source_language || '')}"
-                    data-target="${escapeHtml(translation.target_language)}"
-                    title="Edit">
-                    <i data-feather="edit"></i>
-                </button>
+                @if ($canDeleteRecords)
+                    <button class="btn btn-xs btn-danger delete-translation-btn"
+                        data-id="${translation.id}" title="Delete">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                @endif
+                @if ($canEditRecords)
+                    <button class="btn btn-xs btn-warning edit-translation-btn"
+                        data-id="${translation.id}"
+                        data-original="${escapeHtml(translation.original_content)}"
+                        data-translated="${escapeHtml(translation.translated_content)}"
+                        data-source="${escapeHtml(translation.source_language || '')}"
+                        data-target="${escapeHtml(translation.target_language)}"
+                        title="Edit">
+                        <i data-feather="edit"></i>
+                    </button>
+                @endif
             `;
         }
 
